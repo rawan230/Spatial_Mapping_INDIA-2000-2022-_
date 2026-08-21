@@ -462,6 +462,18 @@ positive values mean net loss. National mean forest cover (NDVI grid), post the
 2026-08-10 forest-class reconciliation: 2001=10.2%, 2020=10.5%, 2022=10.7% (was
 7.8%/7.9%/8.0% under the previous 11-code definition).
 
+**2026-08-21 data-leakage fix, superseding this subsection's original output
+columns**: `forest_frac_recent` (2020), `forest_frac_current` (2022), and
+`forest_loss_baseline_to_recent` were all **dropped** from the final feature stack
+— both non-baseline years fall inside the pooled 2000–2022 fire label's own time
+window, a real reverse-causality risk (published literature on post-fire land-cover
+change documents burned forest commonly gets reclassified to shrubland/agriculture
+in later LULC products, meaning these features could partly encode the *outcome* of
+fire rather than a pre-fire condition). Only `forest_frac_baseline` (2001) survives
+as the forest-fraction feature going forward. The underlying computation described
+above (reproject/average-resample for all three years) is unchanged — only the
+recent/current/loss columns' presence in the final parquet/stack changed.
+
 ### Grid alignment
 
 Every other source (NDVI/LST/FLDAS/land-cover/fire) is loaded with a **hard
@@ -530,6 +542,17 @@ CVSI k8 rename — see Step 6 section above): ROC-AUC 0.9674 (was 0.9676 pre-fix
 Gini-importance features (0.160, 0.141, 0.112), ahead of `ndvi_mean` (0.094) —
 consistent with the corrected 13-code forest definition capturing more fire-relevant
 area than the previous 11-code version.
+
+**Superseded 2026-08-21/22** (`forest_frac_recent`/`current` dropped as a data-
+leakage fix, see the LULC subsection above; RF/MaxEnt hyperparameters also
+genuinely tuned via a validation split for the first time, plus a new spatial-block
+CV added): current headline is **ROC-AUC 0.9698** (tuned RF, 55-feature set,
+`max_depth=25, min_samples_leaf=3`), AP 0.6961. `forest_frac_baseline` alone is now
+the single top Gini-importance feature (0.2066). New: RF's own spatial-block CV
+(2°×2°, matching CDR-PINN's Track B1) scores 0.9501±0.0031 — this pipeline's
+first-ever spatial-generalization number for its classical baseline. Full
+before/after numbers: `Integrated_Analysis/Model_Outputs/rf_hp_search_result.json`,
+`Integrated_Analysis/Model_Outputs/Model_Comparison_SpatialBlockCV.csv`.
 
 ### Reproducibility check
 
