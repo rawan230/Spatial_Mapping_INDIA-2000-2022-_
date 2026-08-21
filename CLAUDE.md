@@ -78,10 +78,15 @@ actually in and whether *that* folder has its own `.git`:
 | 5b — Accessibility (distance to roads/rail/water) | `Distance_Roads_Railways_Waterways_Analysis/` | Yes (added 2026-08-18, numbered + pushed 2026-08-19) |
 | 6 — Integrated alignment | `Integrated_Analysis/` | Yes (pushed 2026-08-07) |
 | 7 — Susceptibility model | `Integrated_Analysis/` (same folder as Step 6) | Yes (same repo as Step 6) |
-| 8 — PINN comparison | `Physics_Informed_FireRisk_Model/` | Yes (initialized 2026-08-21, local commit only, no remote registered yet) |
+| 8 — PINN comparison | `Physics_Informed_FireRisk_Model/` | Yes (initialized 2026-08-21, pushed 2026-08-21) |
 
 `Forest fire Extraction in INDIA(2000-2022)/` remote: https://github.com/rawan230/Forest-Fire-Points-Extraction-in-India-2000-2022-
 `Integrated_Analysis/` remote: https://github.com/rawan230/Integrated-Fire-Risk-Analysis-in-India-and-Impliment-Baseline-Random-Forest-Model-
+`Physics_Informed_FireRisk_Model/` remote: https://github.com/rawan230/_PINO_For_Spatial_Mapping_INDIA-2000-2022- — also holds
+`Design_and_Paper/`, a copy of the CDR-PINN design/paper `.md` docs that otherwise live at the
+project root, added 2026-08-21 so this remote is a self-contained PINO deliverable (implementation +
+design + manuscript together). The project-root copies remain the canonical working copies, tracked
+separately by the root's own (unpushed) git repo.
 `Terrain_Elevation_Slope_Aspect_Analysis/` remote: https://github.com/rawan230/Terrain-Elevation-Slope-Aspect-India-SRTMGL3-90m-forest_fire_India-2000-2022-
 `Distance_Roads_Railways_Waterways_Analysis/` remote: https://github.com/rawan230/India_Distance_Analysis-Roads-Railways-Waterways-Forest-Fire-in-India-2000-2022-
 
