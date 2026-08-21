@@ -142,6 +142,51 @@ on the physics constraint itself, which is architecturally minimal by design (§
 the diffusion document: "an oversized network risks overfitting a smooth function with
 no benefit" — the same minimal-parameter philosophy extended to all three heads).
 
+### 4.1a Architecture in Standard Deep-Learning Terminology
+
+Stated explicitly, since an FNO's building blocks map onto CNN vocabulary
+(channels/kernel/stride/padding/pooling) only partially, and every prior draft of this
+section left that mapping implicit — worth a reviewer's read without guessing:
+
+- **Channels.** Input channel count is **7** (the static+time-varying covariate stack:
+  NDVI baseline, NDVI monthly anomaly, forest fraction, dryness proxy, slope, distance
+  to roads, elevation) plus the evolving scalar state `u_t`, lifted to a **hidden
+  width of 32 channels** by the lifting layer and held at that width through all 4
+  spectral blocks, then projected back down to **1 output channel** (the next-month
+  state `u_{t+1}`) by the two-layer projection head.
+- **"Kernel."** The FNO backbone has no spatial kernel or receptive-field expansion in
+  the CNN sense anywhere. Each spectral block's non-spectral path — the channel-mixing
+  skip connection run in parallel with the spectral convolution — is a **pointwise 1×1
+  convolution**: literally `kernel_size=1, stride=1, padding=0`, i.e. a per-pixel linear
+  layer (a `32→32` channel mixing matrix) applied identically and independently at
+  every one of the grid's spatial locations, with no neighborhood mixing at all. The
+  lifting layer (`7→32`) and the two projection layers (`32→32→1`) are the same
+  `kernel_size=1` pointwise operation. **No layer in this network has a spatial kernel
+  larger than 1×1** — all spatial mixing happens exclusively through the spectral
+  convolution (§4.3), which operates in the frequency domain via a fixed **16×16
+  Fourier-mode truncation**, not a sliding-window kernel at all. Calling this a
+  "kernel" would be a category error worth avoiding in a methods section: it is a
+  global spectral filter (every retained mode is a function of the *entire* spatial
+  field), not a local, translation-invariant convolutional filter.
+- **Stride and padding**: not applicable to the spectral convolution (it is not a
+  sliding-window operation); the pointwise 1×1 convolutions all use `stride=1,
+  padding=0` by construction (a 1×1 kernel has no receptive field to pad or stride
+  across).
+- **Pooling: none, anywhere in this architecture, by deliberate design.** FNO operates
+  at the full 256×256 grid resolution at every layer, from input to output — there is
+  no downsampling/upsampling path. This is not an oversight but a load-bearing
+  architectural property: resolution-independence (Li et al., 2023 — the network can be
+  evaluated at a different grid resolution than it was trained on, since the spectral
+  convolution's mode count is resolution-agnostic) is only possible if the network
+  never ties its weights to a specific spatial resolution the way a pooling/stride-2
+  downsampling path would. The closest functional analogue to a pooling layer is the
+  16×16 Fourier-mode truncation itself — it does discard information (high spatial
+  frequencies beyond mode 16), the same *purpose* a pooling layer serves (capacity
+  control / a form of implicit regularization, §8.4) — but it does so **globally in the
+  frequency domain**, not by locally aggregating neighboring pixels the way max/average
+  pooling does spatially. These are genuinely different operations that happen to serve
+  a structurally similar role, not the same operation under a different name.
+
 ### 4.2 Physics Heads
 
 | Head | Inputs | Output | Constrains |
