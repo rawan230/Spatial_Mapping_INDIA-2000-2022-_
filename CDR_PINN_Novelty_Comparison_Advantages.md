@@ -101,7 +101,7 @@ numbers):
 
 | Model | ROC-AUC | Average Precision |
 |---|---:|---:|
-| Random Forest (Step 7, 55-feature, tuned) | 0.9698 | 0.6961 |
+| Random Forest (Step 7, 55-feature, tuned) | 0.9701 | 0.6961 |
 | MaxEnt / `elapid` (Step 7, 55-feature, untuned) | 0.9594 | 0.6246 |
 | Plain MLP (Step 8, Track A) | 0.9614 | — |
 | Plain-monotonicity PINN (Step 8, Track A) | 0.9613 | — |
@@ -119,7 +119,7 @@ diffusion alone is a genuinely weak predictor (0.60, barely above the
 advection term produces the largest single jump (+0.322 AUC), and adding the
 reaction term adds a further, smaller but real improvement (+0.016 AUC). Full CDR
 (0.9398) is within ~0.02–0.03 AUC of the two classical baselines (MaxEnt 0.9594, RF
-0.9698, both now hyperparameter-considered rather than untested defaults) despite a
+0.9701, both now hyperparameter-considered rather than untested defaults) despite a
 comparatively small architecture (1.05M parameters) — the term-ablation trend, not
 the raw final number, is the paper's actual evidence that the physics formulation is
 doing real work, not decoration.
@@ -160,7 +160,7 @@ protocol, 0.9398) and Track B3 (leave-years-out, 0.8967) hold up well; Track B1
 (spatial block CV, 0.7538 ± 0.0162) and Track B2 (leave-one-region-out, 0.5989 ±
 0.0815, one region below chance) are genuinely weak at this training scale — and, as
 of 2026-08-22, demonstrably weak *relative to classical ML on the same fold scheme*,
-not just weak in absolute terms: RF scores 0.9501 ± 0.0031 and MaxEnt scores 0.9455
+not just weak in absolute terms: RF scores 0.9497 ± 0.0033 and MaxEnt scores 0.9455
 ± 0.0050 on the identical Track B1 blocks. This closes the earlier open question
 ("is Track B1 hard for everyone, or just CDR-PINN?") with an answer unfavorable to
 CDR-PINN — classical ML handles this spatial split comfortably, CDR-PINN does not.

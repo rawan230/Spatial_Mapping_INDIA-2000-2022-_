@@ -396,14 +396,14 @@ use PINO-paper defaults chosen once, not tuned, and remain future work (§7.2).
 
 | Model | ROC-AUC | Average Precision |
 |---|---:|---:|
-| Random Forest (55-feature, full 15/15 Biswas parity, hyperparameter-tuned via validation) | **0.9698** | 0.6961 |
+| Random Forest (55-feature, full 15/15 Biswas parity, hyperparameter-tuned via validation) | **0.9701** | 0.6961 |
 | MaxEnt (`elapid`, 55-feature, untuned) | 0.9594 | 0.6246 |
 | Plain MLP (Step 8) | 0.9614 | — |
 | Plain-monotonicity PINN (Step 8) | 0.9613 | — |
 
 Random Forest's number reflects a real, validated hyperparameter search (§3.4a) —
 `max_depth=25, min_samples_leaf=3` beat the original literature-default
-`max_depth=20, min_samples_leaf=5` (0.9679 val AUC vs. 0.9698 test AUC for the tuned
+`max_depth=20, min_samples_leaf=5` (0.9679 val AUC vs. 0.9701 test AUC for the tuned
 winner) on validation AUC. MaxEnt was not re-tuned in this pass.
 
 ### 4.2 CDR-PINN Term-Ablation Study (new, this work)
@@ -450,7 +450,7 @@ silently assumed.
   plot (`cdr_pinn_full_cdr_standard_protocol_loss_curve.png`) is the first figure
   this model has produced in this study.
 - **Random Forest hyperparameters**: small validated grid over `max_depth`/
-  `min_samples_leaf` (§4.1), genuinely improved the result (0.9679→0.9698 val→test
+  `min_samples_leaf` (§4.1), genuinely improved the result (0.9679→0.9701 val→test
   AUC for the winner) rather than confirming the untuned default was already optimal.
 - **MaxEnt hyperparameters**: not yet tuned — disclosed as remaining work, not
   silently skipped.
@@ -474,7 +474,7 @@ the current protocol is the natural next step, not yet done.
 **New this pass — RF/MaxEnt's own spatial-block CV, closing the apples-to-oranges
 gap** (§4.1's classical baselines never had a spatial-generalization number before):
 using the identical 2°×2° `GroupKFold` scheme as Track B1, **Random Forest scores
-0.9501 ± 0.0031 and MaxEnt scores 0.9455 ± 0.0050** — both far above CDR-PINN's own
+0.9497 ± 0.0033 and MaxEnt scores 0.9455 ± 0.0050** — both far above CDR-PINN's own
 0.7538. This is an honest, consequential, not-favorable-to-CDR-PINN result: even
 under a fair spatial-generalization comparison, classical ML clearly outperforms
 CDR-PINN, not just on the random split. The spatial-generalization advantage this
@@ -711,7 +711,7 @@ under-optimized model that further tuning would unlock.
 
 | Model | Params/trees | Train time | Inference | ROC-AUC |
 |---|---:|---|---|---:|
-| Random Forest (tuned: max_depth=25, min_samples_leaf=3) | 200 trees | 210.0 s | 1.5 s | 0.9698 |
+| Random Forest (tuned: max_depth=25, min_samples_leaf=3) | 200 trees | 210.0 s | 1.5 s | 0.9701 |
 | MaxEnt (untuned) | linear+hinge+product | 1,732.2 s | 34.6 s | 0.9594 |
 | CDR-PINN, full physics, standard protocol | 1,054,613 | ~132 s (65 ep to best checkpoint, early-stopped at 65/80) | — | 0.9398 |
 | CDR-PINN, no physics (identical architecture, pre-standard-protocol figures) | 1,054,613 | 140.4 s (80 ep) | — | 0.9463 |

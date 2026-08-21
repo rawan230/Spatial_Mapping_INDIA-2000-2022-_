@@ -166,9 +166,9 @@ shouldn't touch.
    a computational-cost/reproducibility report and a full-country fire-susceptibility
    probability GeoTIFF. Current result on the corrected 55-feature set, hyperparameter-
    tuned via a genuine validation split (2026-08-22, `max_depth=25, min_samples_leaf=3`
-   beat the literature-default `20/5` on validation AUC): **ROC-AUC 0.9698**, AP 0.6961.
+   beat the literature-default `20/5` on validation AUC): **ROC-AUC 0.9701**, AP 0.6961.
    Also now has its own spatial-block CV (2°×2°, matching CDR-PINN's Track B1 exactly):
-   RF 0.9501±0.0031, MaxEnt 0.9455±0.0050 — both far above CDR-PINN's spatial-CV number,
+   RF 0.9497±0.0033, MaxEnt 0.9455±0.0050 — both far above CDR-PINN's spatial-CV number,
    closing an earlier apples-to-oranges comparison gap with an answer unfavorable to the
    PINN. Kept as a classical-ML baseline, not a PINN dependency — see the
    `integrated-fire-risk-model` skill for the full reasoning.
@@ -215,7 +215,7 @@ shouldn't touch.
    canonical CDR-PINN number: **test ROC-AUC 0.9398** (val 0.9351), essentially
    unchanged from the original ad-hoc 0.9406 but now properly validated. **Also
    2026-08-22: RF/MaxEnt got their own spatial-block CV** (matching CDR-PINN's Track
-   B1 exactly) — RF 0.9501±0.0031, MaxEnt 0.9455±0.0050, both far above CDR-PINN's
+   B1 exactly) — RF 0.9497±0.0033, MaxEnt 0.9455±0.0050, both far above CDR-PINN's
    own 0.7538, closing an earlier apples-to-oranges comparison gap with an honest,
    unfavorable-to-the-PINN answer: temporal generalization (Track B3), not spatial,
    is CDR-PINN's one clear generalization advantage. Full writeup:

@@ -546,10 +546,10 @@ area than the previous 11-code version.
 **Superseded 2026-08-21/22** (`forest_frac_recent`/`current` dropped as a data-
 leakage fix, see the LULC subsection above; RF/MaxEnt hyperparameters also
 genuinely tuned via a validation split for the first time, plus a new spatial-block
-CV added): current headline is **ROC-AUC 0.9698** (tuned RF, 55-feature set,
+CV added): current headline is **ROC-AUC 0.9701** (tuned RF, 55-feature set,
 `max_depth=25, min_samples_leaf=3`), AP 0.6961. `forest_frac_baseline` alone is now
 the single top Gini-importance feature (0.2066). New: RF's own spatial-block CV
-(2°×2°, matching CDR-PINN's Track B1) scores 0.9501±0.0031 — this pipeline's
+(2°×2°, matching CDR-PINN's Track B1) scores 0.9497±0.0033 — this pipeline's
 first-ever spatial-generalization number for its classical baseline. Full
 before/after numbers: `Integrated_Analysis/Model_Outputs/rf_hp_search_result.json`,
 `Integrated_Analysis/Model_Outputs/Model_Comparison_SpatialBlockCV.csv`.
