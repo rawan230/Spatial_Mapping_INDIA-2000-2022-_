@@ -145,27 +145,32 @@ shouldn't touch.
    `Step5_...ipynb` before the 2026-08-19 renumbering, `Step4_...ipynb` before that) — the
    assembly point: builds LULC forest-fraction features (the one input not otherwise
    grid-aligned) and stacks Steps 1, 2, 3, 4 (FLDAS climatic variables + 22-class land
-   cover), and — as of 2026-08-20 — 5 (terrain/accessibility) + LULC into one 60-band
+   cover), and — as of 2026-08-20 — 5 (terrain/accessibility) + LULC into one 57-band
    `Integrated_FireRisk_Stack.tif` and a flattened `Integrated_FireRisk_Pixels.parquet`
-   (4,161,009 in-India pixels × 62 columns / 58 features after dropping
+   (4,161,009 in-India pixels × 59 columns / 55 features after dropping
    `lon`/`lat`/`fire_count`/label — full 15/15 Biswas et al. predictor-group parity).
    FLDAS wiring was added 2026-08-07; forest-class definition reconciled with Step 1 on
    2026-08-10 (national forest fraction rose ~7.8-8.0% → ~10.2-10.7%); Step 5's
-   terrain/accessibility features were wired in 2026-08-20 (was previously the next
-   remaining task, no longer gated on anything once the burned-area Jan/Feb download
-   that had been blocking Step 1's own supplementary analysis landed and was re-run
-   2026-08-20, see above), closing the pipeline's last feature-parity gap and directly
-   enabling Step 7's full-58-feature retrain immediately below.
+   terrain/accessibility features were wired in 2026-08-20, closing the pipeline's last
+   feature-parity gap. **2026-08-21: a data-leakage fix** dropped `forest_frac_recent`
+   (2020)/`forest_frac_current` (2022)/a forest-loss feature — both years overlapped
+   the pooled 2000–2022 fire label's own time window, a real reverse-causality risk
+   (post-fire land cover commonly gets reclassified in later LULC products). Only
+   `forest_frac_baseline` (2001) survives, taking the feature count from 58→55
+   (was 60-band/62-column before the fix).
 7. **Susceptibility model** (`Step7_FireRisk_Susceptibility_Model.ipynb`, was
    `Step6_...ipynb` before the 2026-08-19 renumbering, `Step5_...ipynb` before that) —
    Random Forest (+ a real trained MaxEnt baseline, added to compare directly against
    Biswas et al.'s own method) trained on Step 6's parquet table (dynamically picks up
    whatever feature columns are present), evaluated with ROC-AUC/PR/cross-validation, plus
    a computational-cost/reproducibility report and a full-country fire-susceptibility
-   probability GeoTIFF. Current result on the full 58-feature set (retrained 2026-08-20
-   after Step 5a/5b terrain/accessibility wiring — the model now genuinely trains on all
-   15/15 of Biswas et al.'s predictor variables, not just 9): ROC-AUC 0.9683, 5-fold CV AUC
-   0.9679 ± 0.0002. Kept as a classical-ML baseline, not a PINN dependency — see the
+   probability GeoTIFF. Current result on the corrected 55-feature set, hyperparameter-
+   tuned via a genuine validation split (2026-08-22, `max_depth=25, min_samples_leaf=3`
+   beat the literature-default `20/5` on validation AUC): **ROC-AUC 0.9698**, AP 0.6961.
+   Also now has its own spatial-block CV (2°×2°, matching CDR-PINN's Track B1 exactly):
+   RF 0.9501±0.0031, MaxEnt 0.9455±0.0050 — both far above CDR-PINN's spatial-CV number,
+   closing an earlier apples-to-oranges comparison gap with an answer unfavorable to the
+   PINN. Kept as a classical-ML baseline, not a PINN dependency — see the
    `integrated-fire-risk-model` skill for the full reasoning.
 8. **PINN comparison** (`Step8_PINN_FireRisk_Model.ipynb` + `Step8b_PINN_Seed_Robustness_
    Check.ipynb`, was `Step7_...`/`Step7b_...` before the 2026-08-19 renumbering) — already
@@ -197,10 +202,24 @@ shouldn't touch.
    all four generalization tracks (temporal strong at 0.897, spatial weak at
    0.60–0.75), all three of Biswas et al.'s variable-understanding analyses
    reproduced (permutation importance, response curves, Jackknife retraining — all
-   converge on near-total elevation dominance), and six tuning-side interventions
+   converge on near-total elevation dominance, six independent lines of evidence as
+   of the 2026-08-22 re-verification), and six tuning-side interventions
    (metric-fix, scale-up, causal time-weighting, curriculum learning, LR-schedule ×2)
    tested to rule out an optimization explanation for the RF/MaxEnt accuracy gap.
-   Full writeup: `CDR_PINN_Full_Paper_Draft.md`, `CDR_PINN_Methodology_Section.md`,
+   **2026-08-21/22: a genuine train/validation/test standard protocol was adopted**
+   (65/15/20 split, validated weight-decay search, adaptive `ReduceLROnPlateau`,
+   early stopping on validation AUC — replacing every earlier ad-hoc fixed-epoch-
+   budget run) after a real data-leakage fix in Step 6 (`forest_frac_recent`/
+   `current` dropped, only the pre-fire-period `forest_frac_baseline` survives, since
+   both dropped years overlapped the fire label's own time window). Current
+   canonical CDR-PINN number: **test ROC-AUC 0.9398** (val 0.9351), essentially
+   unchanged from the original ad-hoc 0.9406 but now properly validated. **Also
+   2026-08-22: RF/MaxEnt got their own spatial-block CV** (matching CDR-PINN's Track
+   B1 exactly) — RF 0.9501±0.0031, MaxEnt 0.9455±0.0050, both far above CDR-PINN's
+   own 0.7538, closing an earlier apples-to-oranges comparison gap with an honest,
+   unfavorable-to-the-PINN answer: temporal generalization (Track B3), not spatial,
+   is CDR-PINN's one clear generalization advantage. Full writeup:
+   `CDR_PINN_Full_Paper_Draft.md`, `CDR_PINN_Methodology_Section.md`,
    `CDR_PINN_Novelty_Comparison_Advantages.md`, `CDR_PINN_Study_Clarifications_QA.md`
    (all project root).
 
