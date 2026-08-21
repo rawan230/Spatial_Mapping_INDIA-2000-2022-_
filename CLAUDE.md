@@ -138,20 +138,24 @@ shouldn't touch.
    genuine gaps — elevation, slope, aspect (SRTMGL3 90m DEM, GPU Horn's-method gradient)
    and distance to roads/railways/waterways (Geofabrik OSM 2022, GPU Euclidean distance
    transform) — are closed here, bringing this pipeline to full 15/15 predictor parity
-   with the reference paper. Runs alongside Step 4, feeds Step 6, not yet wired in. See
-   each repo's own `README.md` for full results and methodology.
+   with the reference paper. Runs alongside Step 4, feeds Step 6 — wired in 2026-08-20
+   (see Step 6/7 below). See each repo's own `README.md` for full results and
+   methodology.
 6. **Integrated alignment** (`Step6_Integrated_FireRisk_Analysis.ipynb`, was
    `Step5_...ipynb` before the 2026-08-19 renumbering, `Step4_...ipynb` before that) — the
-   assembly point: builds LULC forest-fraction features (the one input not yet
-   grid-aligned) and stacks Steps 1, 2, 3, and 4 (FLDAS climatic variables + 22-class land
-   cover) + LULC into one 54-band `Integrated_FireRisk_Stack.tif` and a flattened
-   `Integrated_FireRisk_Pixels.parquet` (4,161,009 in-India pixels × 56 columns / 52
-   features after dropping `lon`/`lat`/`fire_count`/label). FLDAS wiring was added
-   2026-08-07; forest-class definition reconciled with Step 1 on 2026-08-10 (national
-   forest fraction rose ~7.8-8.0% → ~10.2-10.7%). Step 5's terrain/accessibility features
-   are not yet wired in — that's the next remaining task (no longer gated on anything;
-   the burned-area Jan/Feb download that was previously blocking Step 1's own
-   supplementary analysis landed and was re-run 2026-08-20, see above).
+   assembly point: builds LULC forest-fraction features (the one input not otherwise
+   grid-aligned) and stacks Steps 1, 2, 3, 4 (FLDAS climatic variables + 22-class land
+   cover), and — as of 2026-08-20 — 5 (terrain/accessibility) + LULC into one 60-band
+   `Integrated_FireRisk_Stack.tif` and a flattened `Integrated_FireRisk_Pixels.parquet`
+   (4,161,009 in-India pixels × 62 columns / 58 features after dropping
+   `lon`/`lat`/`fire_count`/label — full 15/15 Biswas et al. predictor-group parity).
+   FLDAS wiring was added 2026-08-07; forest-class definition reconciled with Step 1 on
+   2026-08-10 (national forest fraction rose ~7.8-8.0% → ~10.2-10.7%); Step 5's
+   terrain/accessibility features were wired in 2026-08-20 (was previously the next
+   remaining task, no longer gated on anything once the burned-area Jan/Feb download
+   that had been blocking Step 1's own supplementary analysis landed and was re-run
+   2026-08-20, see above), closing the pipeline's last feature-parity gap and directly
+   enabling Step 7's full-58-feature retrain immediately below.
 7. **Susceptibility model** (`Step7_FireRisk_Susceptibility_Model.ipynb`, was
    `Step6_...ipynb` before the 2026-08-19 renumbering, `Step5_...ipynb` before that) —
    Random Forest (+ a real trained MaxEnt baseline, added to compare directly against
