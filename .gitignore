@@ -1,0 +1,26 @@
+*.csv
+*.shp
+*.shx
+*.dbf
+*.prj
+*.tif
+*.nc
+*.hdf
+*.h5
+*.parquet
+*.zip
+*.rar
+
+# ── Jupyter / Python / editor housekeeping ──────────────────────────────
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.claude/
+.vscode/
+
+# ── Every step subfolder is (or will become) its own independent git repo
+# with its own remote (see CLAUDE.md's repo table) — this root repo tracks ONLY
+# the loose root-level files (CDR-PINN design/paper docs, CLAUDE.md,
+# METHODOLOGY.md, root notebooks/boundary data), never crawling into a nested
+# .git. Never remove this without checking CLAUDE.md's repo table first.
+*/
