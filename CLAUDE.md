@@ -61,9 +61,12 @@ GPU-vectorized statistics not present in the reference paper.
 
 Each step folder is (or is meant to become) its **own independent git repository with its
 own GitHub remote**, its own `README.md`, `requirements.txt`, and `.gitignore`. The project
-root itself currently has no `.git` (it was deleted mid-project and not yet reinitialized).
-Before any git operation, check which folder you're actually in and whether *that* folder
-has a `.git`:
+root also has its own git repo now (initialized 2026-08-21, local only, no remote) —
+but it is deliberately scoped to loose root-level files only (CDR-PINN design/paper
+docs, this file, `METHODOLOGY.md`, a couple of root-level notebooks) via a root
+`.gitignore` that excludes every subdirectory (`*/`), so it never crawls into any
+step folder's nested `.git`. Before any git operation, check which folder you're
+actually in and whether *that* folder has its own `.git`:
 
 | Step | Folder | Has own `.git`? |
 |---|---|---|
