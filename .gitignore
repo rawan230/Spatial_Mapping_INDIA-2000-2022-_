@@ -24,3 +24,7 @@ __pycache__/
 # METHODOLOGY.md, root notebooks/boundary data), never crawling into a nested
 # .git. Never remove this without checking CLAUDE.md's repo table first.
 */
+
+# Exception: cross-step comparison figures (draws from multiple steps' data,
+# doesn't belong to any single step's own repo) — no nested .git inside it.
+!Biswas_Comparison_Figures/
