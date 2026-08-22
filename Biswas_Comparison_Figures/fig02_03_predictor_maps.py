@@ -40,9 +40,23 @@ def plot_panel(items, title, out_name, ncols=4):
             with rasterio.open(path) as src:
                 arr = src.read(1, masked=True)
                 bounds = src.bounds
-            im = ax.imshow(arr, cmap=cmap, extent=[bounds.left, bounds.right, bounds.bottom, bounds.top])
-            fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02)
+            vmin, vmax = float(arr.min()), float(arr.max())
+            im = ax.imshow(arr, cmap=cmap, vmin=vmin, vmax=vmax,
+                            extent=[bounds.left, bounds.right, bounds.bottom, bounds.top])
+            cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02)
+            # Pin the colorbar's own end ticks to the exact data min/max (not
+            # matplotlib's auto-rounded ticks), so the figure itself states the
+            # real range instead of leaving the reader to infer it from rounded
+            # gridlines.
+            # Drop auto-ticks too close to vmin/vmax (within 8% of the range) so the
+            # pinned exact min/max labels don't collide with a neighboring auto tick.
+            margin = 0.08 * (vmax - vmin)
+            existing_ticks = [t for t in cbar.get_ticks() if vmin + margin < t < vmax - margin]
+            cbar.set_ticks([vmin] + existing_ticks + [vmax])
+            cbar.set_ticklabels([f"{vmin:.3g}"] + [f"{t:.3g}" for t in existing_ticks] + [f"{vmax:.3g}"])
             ax.set_title(name, fontsize=10)
+            ax.text(0.02, -0.06, f"min={vmin:.3g}   max={vmax:.3g}",
+                     transform=ax.transAxes, fontsize=7.5, ha="left", va="top", color="#333333")
             ax.set_xticks([]); ax.set_yticks([])
         except Exception as e:
             ax.text(0.5, 0.5, f"{name}\n(load error: {e})", ha="center", va="center", transform=ax.transAxes, fontsize=8)
