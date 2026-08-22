@@ -2,13 +2,14 @@
 count per pixel (625 km^2, their exact stated resolution) for (a) 2001-2020,
 (b) 2001-2010, and (c) 2011-2020 -- using this study's own real fire-point data.
 
-Rebuilt from a continuous hexbin+log-colorbar version to a proper classified
-choropleth: a real 25km x 25km (625 km^2) equal-area grid (Albers Equal-Area
-Conic centered on India, standard parallels 12N/32N -- the conventional choice
-for India-extent equal-area grids), fire counts binned into discrete classes,
-plotted with a legend of colored boxes (one per class) rather than a continuous
-colorbar -- matching the classified-map convention Biswas et al.'s Fig. 6 uses
-and giving a real per-class distribution instead of an unbinned density surface."""
+Matches Biswas et al.'s actual Fig. 6 convention (verified by rendering their PDF
+page directly): a SHARED set of fixed count-class breaks across all three panels
+(computed once from panel a's full-period data, not re-classified per panel --
+using the same breaks per panel is what makes (a) vs (b) vs (c) visually
+comparable), in-India zero-count cells colored as the lowest class (matching
+their solid-blue "0-36" background) rather than left blank, and a single
+horizontal class legend placed in the blank margin below all three panels
+-- not overlapping the map, which is what a per-panel in-axes legend did before."""
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -17,15 +18,12 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import BoundaryNorm, ListedColormap
 from matplotlib.patches import Patch
 import geopandas as gpd
+from shapely.geometry import box
 
 FIRE_CSV = r"D:\FOREST FIRE MAPPING(INDIA)\Forest fire Extraction in INDIA(2000-2022)\Forest_Fire_Outputs\all_forest_fires_2000_2022.csv"
 BOUNDARY_SHP = r"D:\FOREST FIRE MAPPING(INDIA)\LST_analysis\India_State_Boundary.shp"
 OUT_PATH = r"D:\FOREST FIRE MAPPING(INDIA)\Biswas_Comparison_Figures\Fig06_FireDensity_3Period.png"
 
-# Albers Equal-Area Conic centered on India -- standard parallels 12N/32N is the
-# conventional choice for India-extent equal-area analyses (matches common
-# India climate/GIS grid definitions), giving true km^2 cell areas rather than
-# an unprojected degree-grid approximation.
 AEA_CRS = "+proj=aea +lat_1=12 +lat_2=32 +lat_0=22 +lon_0=82 +datum=WGS84 +units=m +no_defs"
 CELL_M = 25_000.0  # 25km x 25km = 625 km^2, matching Biswas et al.'s stated Fig. 6 resolution
 
@@ -42,6 +40,7 @@ boundary = gpd.read_file(BOUNDARY_SHP)
 if boundary.crs is None:
     boundary = boundary.set_crs("EPSG:3857", allow_override=True)
 boundary_aea = boundary.to_crs(AEA_CRS)
+india_union = boundary_aea.union_all()
 
 xmin, ymin, xmax, ymax = boundary_aea.total_bounds
 nx = int(np.ceil((xmax - xmin) / CELL_M))
@@ -49,49 +48,67 @@ ny = int(np.ceil((ymax - ymin) / CELL_M))
 xedges = xmin + np.arange(nx + 1) * CELL_M
 yedges = ymin + np.arange(ny + 1) * CELL_M
 
+# Which grid cells actually fall inside India (by center point) -- lets us paint
+# true zero-fire cells with the bottom class color instead of leaving them blank.
+cx = (xedges[:-1] + xedges[1:]) / 2
+cy = (yedges[:-1] + yedges[1:]) / 2
+cxx, cyy = np.meshgrid(cx, cy)
+cell_pts = gpd.GeoSeries(gpd.points_from_xy(cxx.ravel(), cyy.ravel()), crs=AEA_CRS)
+in_india = cell_pts.within(india_union).values.reshape(cxx.shape)  # shape (ny, nx), matches counts.T
+
 periods = [
     ("a) 2001-2020", df[(df["year"] >= 2001) & (df["year"] <= 2020)]),
     ("b) 2001-2010", df[(df["year"] >= 2001) & (df["year"] <= 2010)]),
     ("c) 2011-2020", df[(df["year"] >= 2011) & (df["year"] <= 2020)]),
 ]
 
-# Discrete classification: 5 classes via quantile breaks on nonzero cells (a
-# standard classified-choropleth scheme -- comparable in spirit to Biswas et
-# al.'s own classed fire-density symbology, though their exact break method
-# isn't stated in the paper text).
-CLASS_LABELS = ["Very low", "Low", "Moderate", "High", "Very high"]
-CMAP = ListedColormap(["#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"])
-
-fig, axes = plt.subplots(1, 3, figsize=(19, 7.5))
-for ax, (label, sub) in zip(axes, periods):
+counts_by_period = {}
+for label, sub in periods:
     counts, _, _ = np.histogram2d(sub["x_aea"], sub["y_aea"], bins=[xedges, yedges])
-    nonzero = counts[counts > 0]
-    bounds = np.unique(np.quantile(nonzero, [0, 0.2, 0.4, 0.6, 0.8, 1.0]))
-    if len(bounds) < 2:
-        bounds = np.array([nonzero.min() if len(nonzero) else 0, (nonzero.max() if len(nonzero) else 1) + 1])
-    n_classes = len(bounds) - 1
-    class_cmap = ListedColormap(CMAP.colors[:n_classes])
+    counts_by_period[label] = counts
+
+# Fixed shared classification, computed once from panel (a)'s full-period, full-
+# India nonzero cells -- 8 classes via quantiles (Biswas et al.'s own exact break
+# method -- likely Jenks natural breaks -- isn't stated in their paper text, so
+# quantile breaks are used here and disclosed as such).
+counts_a = counts_by_period["a) 2001-2020"]
+nonzero_a = counts_a.T[in_india & (counts_a.T > 0)]
+N_CLASSES = 8
+qs = np.quantile(nonzero_a, np.linspace(0, 1, N_CLASSES))
+bounds = np.concatenate(([0], np.unique(qs)))
+bounds = np.unique(bounds)
+n_classes = len(bounds) - 1
+
+CMAP = ListedColormap(["#2166ac", "#4393c3", "#92c5de", "#ffffbf", "#fed976", "#fd8d3c", "#e31a1c", "#800026"][:n_classes])
+CLASS_LABELS = ["Very low", "Low", "Low-mod", "Moderate", "Mod-high", "High", "Very high", "Extreme"][:n_classes]
+
+fig, axes = plt.subplots(1, 3, figsize=(19, 8.2))
+for ax, (label, sub) in zip(axes, periods):
+    counts = counts_by_period[label]
+    grid = counts.T.copy()
+    grid_masked = np.ma.masked_where(~in_india, grid)  # only mask cells truly outside India
     norm = BoundaryNorm(bounds, n_classes)
 
-    masked = np.ma.masked_where(counts.T == 0, counts.T)
+    ax.pcolormesh(xedges, yedges, grid_masked, cmap=CMAP, norm=norm, zorder=2)
     boundary_aea.boundary.plot(ax=ax, color="black", linewidth=0.5, zorder=3)
-    ax.pcolormesh(xedges, yedges, masked, cmap=class_cmap, norm=norm, zorder=2)
-    ax.set_title(f"{label}  (n={len(sub):,} points, {nx}x{ny} grid @ 625 km2/cell)", fontsize=10)
+    ax.set_title(f"{label}  (n={len(sub):,} points)", fontsize=11, fontweight="bold")
     ax.set_xticks([]); ax.set_yticks([])
     ax.set_aspect("equal")
+    for spine in ax.spines.values():
+        spine.set_visible(True); spine.set_color("black")
 
-    class_labels_this = CLASS_LABELS[:n_classes] if n_classes <= 5 else [f"Class {i+1}" for i in range(n_classes)]
-    handles = [Patch(facecolor=class_cmap(i),
-                      label=f"{class_labels_this[i]}: {int(bounds[i])}-{int(bounds[i+1])} fires/cell")
-               for i in range(n_classes)]
-    ax.legend(handles=handles, loc="lower left", fontsize=6.5, framealpha=0.9, title="Fire count class")
+handles = [Patch(facecolor=CMAP(i), edgecolor="black", linewidth=0.4,
+                  label=f"{CLASS_LABELS[i]}: {int(bounds[i])}-{int(bounds[i+1])}")
+           for i in range(n_classes)]
+fig.legend(handles=handles, loc="lower center", ncol=n_classes, fontsize=9,
+           frameon=False, bbox_to_anchor=(0.5, 0.02), title="Forest fire count per 625 km2 cell (shared across a/b/c)")
 
-fig.suptitle("Spatial Distribution of Forest Fire Count per 625 km2 Pixel -- India\n"
+fig.suptitle(f"Spatial Distribution of Forest Fire Count per 625 km2 Pixel -- India  ({nx}x{ny} grid)\n"
              "(reproduces Biswas et al. 2025, Fig. 6, using this study's own 541,545-point dataset;\n"
-             "classified into quantile-based count classes with a discrete legend, not a continuous density surface)",
-             y=1.06)
-fig.tight_layout(rect=[0, 0, 1, 0.86])
+             "shared quantile-based classes computed from panel a, not re-classified per panel)",
+             fontsize=12.5, y=1.0)
+fig.tight_layout(rect=[0, 0.09, 1, 0.87])
 fig.savefig(OUT_PATH, dpi=150, facecolor="white", bbox_inches="tight")
 print(f"Saved: {OUT_PATH}")
 print(f"Counts: 2001-2020={len(periods[0][1]):,}, 2001-2010={len(periods[1][1]):,}, 2011-2020={len(periods[2][1]):,}")
-print(f"Grid: {nx} x {ny} cells, {CELL_M/1000:.0f}km x {CELL_M/1000:.0f}km = {(CELL_M/1000)**2:.0f} km2/cell")
+print(f"Grid: {nx} x {ny} cells, 625 km2/cell; shared class bounds: {bounds}")
