@@ -174,7 +174,7 @@ ablation and its Jackknife/permutation-importance tests (§Step 8).
 
 **Impact**: this is the step that makes the pipeline's classical-model comparison
 against Biswas et al. genuinely apples-to-apples (matching feature *scope*, not
-just feature *count*) — the Step 7 Random Forest's headline AUC (0.9701, below)
+just feature *count*) — the Step 7 Random Forest's headline AUC (0.9704, below)
 is trained on the full parity feature set, not a partial one.
 
 ---
@@ -238,12 +238,12 @@ al.'s own modeling method on this study's own, more complete data, rather than
 simply citing their reported number. XGBoost was also tested (not the headline
 model, but not overlooked either — see Results).
 
-**Results** (updated 2026-08-22 — after a real data-leakage fix, §Step 6, and a
-validated hyperparameter search):
+**Results** (updated 2026-08-23 — after the specific-humidity feature addition,
+§Step 6, and validated hyperparameter searches for both models):
 | Model | ROC-AUC | Average Precision | Spatial-block CV AUC |
 |---|---:|---:|---:|
-| **Random Forest** (55-feature, full 15/15 parity, tuned: `max_depth=25, min_samples_leaf=3`) | **0.9701** | 0.6961 | **0.9497 ± 0.0033** |
-| MaxEnt (`elapid`, same 55-feature table, untuned) | 0.9594 | 0.6246 | **0.9455 ± 0.0050** |
+| **Random Forest** (57-feature, full 15/15 parity, tuned: `max_depth=25, min_samples_leaf=3`) | **0.9704** | 0.7011 | **0.9498 ± 0.0035** |
+| MaxEnt (`elapid`, same 57-feature table, tuned: `beta_multiplier=4.0`) | 0.9598 | 0.6275 | **0.9465 ± 0.0054** |
 | XGBoost (tested, not headline) | ~0.9678 | — | — |
 
 Gini feature-importance ranking (tuned model) shows *engineered, derived* quantities
@@ -253,11 +253,14 @@ as a leakage fix), `ndvi_trend_2x12ma` (0.0886) and the fire-data-driven breakpo
 feature `ndvi_below_threshold` (0.0749) both outrank or closely compete with raw
 `ndvi_mean` (0.0858).
 
-**Impact**: this study's own MaxEnt replication (0.9594) already beats the
-reference paper's reported MaxEnt performance on this pipeline's more complete
-15/15-variable data — establishing that the data pipeline itself (Steps 1–6) is a
-real methodological upgrade independent of any modeling-paradigm choice. RF's 0.9701
-is the accuracy benchmark every physics-informed model in Step 8 is measured
+**Impact**: this study's own MaxEnt replication (0.9598, `beta_multiplier` validated
+via a small grid — the search found the grid essentially flat, 0.9589-0.9592
+validation AUC across {0.5,1.0,1.5,2.5,4.0}, a genuine near-null tuning result, not
+a large correction) already beats the reference paper's reported MaxEnt performance
+on this pipeline's more complete 15/15-variable data — establishing that the data
+pipeline itself (Steps 1–6) is a real methodological upgrade independent of any
+modeling-paradigm choice. RF's 0.9704 is the accuracy benchmark every physics-informed
+model in Step 8 is measured
 against. **New spatial-block CV result (2°×2° blocks, matching CDR-PINN's own
 Track B1 exactly)**: both RF and MaxEnt comfortably clear 0.94 even under a fair
 spatial-generalization comparison — a real, consequential finding once compared
@@ -381,7 +384,7 @@ runs that had no validation monitoring at all):
 
 **RF/MaxEnt's own spatial-block CV, added 2026-08-22, closing an earlier apples-to-
 oranges gap**: identical 2°×2° `GroupKFold` scheme as Track B1 — **Random Forest
-0.9497 ± 0.0033, MaxEnt 0.9455 ± 0.0050**, both far above CDR-PINN's own 0.7510. This
+0.9498 ± 0.0035, MaxEnt 0.9465 ± 0.0054**, both far above CDR-PINN's own 0.7510. This
 is an honest, consequential finding, not favorable to CDR-PINN: even under a fair
 spatial-generalization comparison, classical ML clearly outperforms the physics-
 informed model, not just on the random split.

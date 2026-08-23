@@ -101,8 +101,8 @@ numbers):
 
 | Model | ROC-AUC | Average Precision |
 |---|---:|---:|
-| Random Forest (Step 7, 55-feature, tuned) | 0.9701 | 0.6961 |
-| MaxEnt / `elapid` (Step 7, 55-feature, untuned) | 0.9594 | 0.6246 |
+| Random Forest (Step 7, 57-feature, tuned) | 0.9704 | 0.7011 |
+| MaxEnt / `elapid` (Step 7, 57-feature, tuned: beta_multiplier=4.0) | 0.9598 | 0.6275 |
 | Plain MLP (Step 8, Track A) | 0.9614 | — |
 | Plain-monotonicity PINN (Step 8, Track A) | 0.9613 | — |
 | **CDR-PINN — diffusion only** | 0.6017 | 0.6050 |
@@ -118,8 +118,8 @@ diffusion alone is a genuinely weak predictor (0.60, barely above the
 0.50/0.42-baseline chance level for this class-balance), adding the terrain-driven
 advection term produces the largest single jump (+0.322 AUC), and adding the
 reaction term adds a further, smaller but real improvement (+0.016 AUC). Full CDR
-(0.9398) is within ~0.02–0.03 AUC of the two classical baselines (MaxEnt 0.9594, RF
-0.9701, both now hyperparameter-considered rather than untested defaults) despite a
+(0.9398) is within ~0.02–0.03 AUC of the two classical baselines (MaxEnt 0.9598, RF
+0.9704, both now genuinely validation-tuned rather than untested defaults) despite a
 comparatively small architecture (1.05M parameters) — the term-ablation trend, not
 the raw final number, is the paper's actual evidence that the physics formulation is
 doing real work, not decoration.
@@ -145,8 +145,8 @@ generalized better than Random Forest under spatial CV in that prior study
 testing whether CDR-PINN's own physics constraint would add a further, separable
 improvement on top of it. **CDR-PINN's own spatial-block CV, now directly measured
 and compared against RF/MaxEnt's own new spatial-block CV on the identical fold
-scheme (§4a below), shows the opposite**: CDR-PINN scores 0.7510, RF scores 0.9501,
-MaxEnt scores 0.9455. Whatever architecture-level spatial-generalization advantage
+scheme (§4a below), shows the opposite**: CDR-PINN scores 0.7510, RF scores 0.9498,
+MaxEnt scores 0.9465. Whatever architecture-level spatial-generalization advantage
 Step 8's simpler models showed did not carry over to CDR-PINN at this training
 scale — an honest, load-bearing correction to this section's original motivating
 premise, not a footnote to bury.
@@ -164,8 +164,9 @@ rather than favorably: Track A (random split, standard protocol, 0.9398) and Tra
 and Track B2 (leave-one-region-out, 0.6187 ± 0.0680, weakest region 0.5387, still
 above chance) are genuinely weak at this training scale — and, as
 of 2026-08-22, demonstrably weak *relative to classical ML on the same fold scheme*,
-not just weak in absolute terms: RF scores 0.9497 ± 0.0033 and MaxEnt scores 0.9455
-± 0.0050 on the identical Track B1 blocks. This closes the earlier open question
+not just weak in absolute terms: RF scores 0.9498 ± 0.0035 and MaxEnt scores 0.9465
+± 0.0054 on the identical Track B1 blocks (MaxEnt's `beta_multiplier` validated-tuned
+2026-08-23). This closes the earlier open question
 ("is Track B1 hard for everyone, or just CDR-PINN?") with an answer unfavorable to
 CDR-PINN — classical ML handles this spatial split comfortably, CDR-PINN does not.
 A matched physics-vs-no-physics comparison on Track A found **no advantage from the

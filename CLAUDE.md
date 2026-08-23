@@ -164,14 +164,18 @@ shouldn't touch.
    Biswas et al.'s own method) trained on Step 6's parquet table (dynamically picks up
    whatever feature columns are present), evaluated with ROC-AUC/PR/cross-validation, plus
    a computational-cost/reproducibility report and a full-country fire-susceptibility
-   probability GeoTIFF. Current result on the corrected 55-feature set, hyperparameter-
-   tuned via a genuine validation split (2026-08-22, `max_depth=25, min_samples_leaf=3`
-   beat the literature-default `20/5` on validation AUC): **ROC-AUC 0.9701**, AP 0.6961.
-   Also now has its own spatial-block CV (2°×2°, matching CDR-PINN's Track B1 exactly):
-   RF 0.9497±0.0033, MaxEnt 0.9455±0.0050 — both far above CDR-PINN's spatial-CV number,
-   closing an earlier apples-to-oranges comparison gap with an answer unfavorable to the
-   PINN. Kept as a classical-ML baseline, not a PINN dependency — see the
-   `integrated-fire-risk-model` skill for the full reasoning.
+   probability GeoTIFF. Current result on the 57-feature set (specific humidity wired in
+   2026-08-22), hyperparameter-tuned via a genuine validation split (`max_depth=25,
+   min_samples_leaf=3` beat the literature-default `20/5` on validation AUC):
+   **RF ROC-AUC 0.9704**, AP 0.7011. **2026-08-23: MaxEnt got the same validated-tuning
+   treatment** (`hp_search_maxent.py`, `beta_multiplier` grid {0.5,1.0,1.5,2.5,4.0}
+   selected by validation AUC) — the grid was essentially flat (val AUC 0.9589-0.9592
+   across the whole range, a genuine near-null tuning result), winner `beta_multiplier=4.0`
+   gives **MaxEnt ROC-AUC 0.9598**, AP 0.6275. Also has its own spatial-block CV (2°×2°,
+   matching CDR-PINN's Track B1 exactly): RF 0.9498±0.0035, MaxEnt 0.9465±0.0054 — both far
+   above CDR-PINN's spatial-CV number, closing an earlier apples-to-oranges comparison gap
+   with an answer unfavorable to the PINN. Kept as a classical-ML baseline, not a PINN
+   dependency — see the `integrated-fire-risk-model` skill for the full reasoning.
 8. **PINN comparison** (`Step8_PINN_FireRisk_Model.ipynb` + `Step8b_PINN_Seed_Robustness_
    Check.ipynb`, was `Step7_...`/`Step7b_...` before the 2026-08-19 renumbering) — already
    built with real results (run 2026-08-08/09, before this project even started tracking
@@ -215,7 +219,8 @@ shouldn't touch.
    canonical CDR-PINN number: **test ROC-AUC 0.9398** (val 0.9351), essentially
    unchanged from the original ad-hoc 0.9406 but now properly validated. **Also
    2026-08-22: RF/MaxEnt got their own spatial-block CV** (matching CDR-PINN's Track
-   B1 exactly) — RF 0.9497±0.0033, MaxEnt 0.9455±0.0050, both far above CDR-PINN's
+   B1 exactly) — RF 0.9498±0.0035, MaxEnt 0.9465±0.0054 (MaxEnt's `beta_multiplier`
+   validated-tuned 2026-08-23, see below), both far above CDR-PINN's
    own 0.7510, closing an earlier apples-to-oranges comparison gap with an honest,
    unfavorable-to-the-PINN answer: temporal generalization (Track B3), not spatial,
    is CDR-PINN's one clear generalization advantage. **2026-08-23: B1/B2/B3 and the

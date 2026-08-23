@@ -167,6 +167,10 @@ Jackknife, and this final re-run).
 | **Final tuned retrain (notebook itself updated)** | 55-feature | 80/20 (notebook's own split) | No (search used val, final notebook doesn't) | **max_depth=25, min_samples_leaf=3** | **0.9701** | 0.9594 (untuned) | 2026-08-22 |
 | Final tuned, spatial-block CV | 55-feature | 2°×2° GroupKFold, 3 folds | No | max_depth=25, min_samples_leaf=3 | **0.9497 ± 0.0033** | 0.9455 ± 0.0050 | 2026-08-22 |
 | Final tuned, 5-fold CV | 55-feature | StratifiedKFold, 5 folds | No | max_depth=25, min_samples_leaf=3 | **0.9698 ± 0.0002** | — | 2026-08-22 |
+| Specific-humidity added (Step 6 wiring) | 57-feature | 80/20 (notebook's own split) | No | max_depth=25, min_samples_leaf=3 | **0.9704** | 0.9598 (still untuned) | 2026-08-22 |
+| **Validated MaxEnt hyperparameter search (`hp_search_maxent.py`)** | 57-feature | **65/15/20** | **Yes** | grid: beta_multiplier ∈ {0.5, 1.0, 1.5, 2.5, 4.0} | — | winner 4.0, val AUC=0.9592 (grid essentially flat, 0.9589–0.9592 — genuine near-null result), test AUC=0.9596 | 2026-08-23 |
+| **Final state — both models validation-tuned** | 57-feature | 80/20 (notebook's own split) | No (both searches used val, final notebook doesn't) | RF: max_depth=25/min_samples_leaf=3; MaxEnt: beta_multiplier=4.0 | **0.9704** | **0.9598** | 2026-08-23 |
+| Final state, spatial-block CV | 57-feature | 2°×2° GroupKFold, 3 folds | No | same as above | **0.9498 ± 0.0035** | **0.9465 ± 0.0054** | 2026-08-23 |
 
 **Note on "validation set used?" for Step 7**: the *search* for the best
 hyperparameters used a genuine validation split; the *final reported* notebook
@@ -201,9 +205,13 @@ separate split). This mirrors standard nested-CV practice.
 - **Converted to validation-set-driven protocol as of 2026-08-23**: CDR-PINN's
   B1/B2/B3 tracks (A2b) and the Jackknife test (A6b) now carve validation
   pixels/years out of each fold's/retrain's own train portion, with early stopping
-  (patience=4) on validation AUC — see section E for the completed re-run.
-- **Not yet converted to validation-set-driven protocol**: MaxEnt's hyperparameters
-  (still untuned defaults).
+  (patience=4) on validation AUC — see section E for the completed re-run. MaxEnt's
+  `beta_multiplier` was also validated-tuned the same day (`hp_search_maxent.py`,
+  section B) — the search found the grid essentially flat (0.9589–0.9592 validation
+  AUC across the whole range), a genuine near-null tuning result, not a large
+  correction, closing this list's last open item.
+- **Every model/track in this study now has at least one validation-set-driven
+  decision point** as of 2026-08-23 — this list has no remaining open items.
 
 ---
 

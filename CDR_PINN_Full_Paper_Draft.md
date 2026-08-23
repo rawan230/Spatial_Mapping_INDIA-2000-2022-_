@@ -396,15 +396,19 @@ use PINO-paper defaults chosen once, not tuned, and remain future work (§7.2).
 
 | Model | ROC-AUC | Average Precision |
 |---|---:|---:|
-| Random Forest (55-feature, full 15/15 Biswas parity, hyperparameter-tuned via validation) | **0.9701** | 0.6961 |
-| MaxEnt (`elapid`, 55-feature, untuned) | 0.9594 | 0.6246 |
+| Random Forest (57-feature, full 15/15 Biswas parity, hyperparameter-tuned via validation) | **0.9704** | 0.7011 |
+| MaxEnt (`elapid`, 57-feature, `beta_multiplier` validated-tuned) | 0.9598 | 0.6275 |
 | Plain MLP (Step 8) | 0.9614 | — |
 | Plain-monotonicity PINN (Step 8) | 0.9613 | — |
 
 Random Forest's number reflects a real, validated hyperparameter search (§3.4a) —
 `max_depth=25, min_samples_leaf=3` beat the original literature-default
-`max_depth=20, min_samples_leaf=5` (0.9679 val AUC vs. 0.9701 test AUC for the tuned
-winner) on validation AUC. MaxEnt was not re-tuned in this pass.
+`max_depth=20, min_samples_leaf=5` (0.9679 val AUC vs. 0.9704 test AUC for the tuned
+winner) on validation AUC. MaxEnt's `beta_multiplier` was later also validated-tuned
+(`hp_search_maxent.py`, grid {0.5,1.0,1.5,2.5,4.0} by validation AUC) — the grid was
+essentially flat (0.9589–0.9592 validation AUC across the whole range), a genuine
+near-null tuning result rather than a large correction; winner `beta_multiplier=4.0`
+is used above.
 
 ### 4.2 CDR-PINN Term-Ablation Study (new, this work)
 
@@ -450,10 +454,12 @@ silently assumed.
   plot (`cdr_pinn_full_cdr_standard_protocol_loss_curve.png`) is the first figure
   this model has produced in this study.
 - **Random Forest hyperparameters**: small validated grid over `max_depth`/
-  `min_samples_leaf` (§4.1), genuinely improved the result (0.9679→0.9701 val→test
+  `min_samples_leaf` (§4.1), genuinely improved the result (0.9679→0.9704 val→test
   AUC for the winner) rather than confirming the untuned default was already optimal.
-- **MaxEnt hyperparameters**: not yet tuned — disclosed as remaining work, not
-  silently skipped.
+- **MaxEnt hyperparameters**: validated grid over `beta_multiplier` (§4.1,
+  2026-08-23) — the grid was essentially flat (0.9589-0.9592 validation AUC across
+  {0.5,1.0,1.5,2.5,4.0}), a genuine near-null tuning result, not a large correction,
+  but a real validated decision rather than an untested default.
 
 ### 4.3 Generalization Tracks and Data-Efficiency Test (new, this work)
 
@@ -479,7 +485,7 @@ remains disclosed as not yet re-run.
 **New this pass — RF/MaxEnt's own spatial-block CV, closing the apples-to-oranges
 gap** (§4.1's classical baselines never had a spatial-generalization number before):
 using the identical 2°×2° `GroupKFold` scheme as Track B1, **Random Forest scores
-0.9497 ± 0.0033 and MaxEnt scores 0.9455 ± 0.0050** — both far above CDR-PINN's own
+0.9498 ± 0.0035 and MaxEnt scores 0.9465 ± 0.0054** — both far above CDR-PINN's own
 0.7510. This is an honest, consequential, not-favorable-to-CDR-PINN result: even
 under a fair spatial-generalization comparison, classical ML clearly outperforms
 CDR-PINN, not just on the random split. The spatial-generalization advantage this
@@ -723,8 +729,8 @@ under-optimized model that further tuning would unlock.
 
 | Model | Params/trees | Train time | Inference | ROC-AUC |
 |---|---:|---|---|---:|
-| Random Forest (tuned: max_depth=25, min_samples_leaf=3) | 200 trees | 210.0 s | 1.5 s | 0.9701 |
-| MaxEnt (untuned) | linear+hinge+product | 1,732.2 s | 34.6 s | 0.9594 |
+| Random Forest (tuned: max_depth=25, min_samples_leaf=3) | 200 trees | 216.0 s | 1.9 s | 0.9704 |
+| MaxEnt (tuned: beta_multiplier=4.0) | linear+hinge+product | 1,232.2 s | 34.0 s | 0.9598 |
 | CDR-PINN, full physics, standard protocol | 1,054,613 | ~132 s (65 ep to best checkpoint, early-stopped at 65/80) | — | 0.9398 |
 | CDR-PINN, no physics (identical architecture, pre-standard-protocol figures) | 1,054,613 | 140.4 s (80 ep) | — | 0.9463 |
 
@@ -822,7 +828,7 @@ evaluated on, and does model ranking hold across all of them?* It does not, but 
 in CDR-PINN's favor on the spatial axis specifically — an update from earlier drafts
 of this section, made honestly rather than left stale. RF and MaxEnt lead on
 in-distribution accuracy (Track A, §4.1) **and now also lead clearly on spatial
-generalization** (§4.3's new RF/MaxEnt spatial-block CV: 0.9501/0.9455, both far
+generalization** (§4.3's new RF/MaxEnt spatial-block CV: 0.9498/0.9465, both far
 above CDR-PINN's own 0.7510) — the earlier apples-to-oranges gap (CDR-PINN had a
 spatial-CV number, RF/MaxEnt didn't) is now closed, and closing it did not favor the
 physics-informed model. RF and MaxEnt remain structurally ineligible for Track B3

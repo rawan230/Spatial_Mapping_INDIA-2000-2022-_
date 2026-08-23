@@ -543,15 +543,21 @@ Gini-importance features (0.160, 0.141, 0.112), ahead of `ndvi_mean` (0.094) —
 consistent with the corrected 13-code forest definition capturing more fire-relevant
 area than the previous 11-code version.
 
-**Superseded 2026-08-21/22** (`forest_frac_recent`/`current` dropped as a data-
-leakage fix, see the LULC subsection above; RF/MaxEnt hyperparameters also
-genuinely tuned via a validation split for the first time, plus a new spatial-block
-CV added): current headline is **ROC-AUC 0.9701** (tuned RF, 55-feature set,
-`max_depth=25, min_samples_leaf=3`), AP 0.6961. `forest_frac_baseline` alone is now
-the single top Gini-importance feature (0.2066). New: RF's own spatial-block CV
-(2°×2°, matching CDR-PINN's Track B1) scores 0.9497±0.0033 — this pipeline's
-first-ever spatial-generalization number for its classical baseline. Full
-before/after numbers: `Integrated_Analysis/Model_Outputs/rf_hp_search_result.json`,
+**Superseded 2026-08-21 through 2026-08-23** (`forest_frac_recent`/`current` dropped
+as a data-leakage fix, see the LULC subsection above; specific humidity wired in
+2026-08-22, 55→57 features; RF hyperparameters genuinely tuned via a validation
+split 2026-08-22, MaxEnt's `beta_multiplier` likewise 2026-08-23; a new
+spatial-block CV added for both): current headline is **RF ROC-AUC 0.9704**
+(tuned, 57-feature set, `max_depth=25, min_samples_leaf=3`), AP 0.7011, and
+**MaxEnt ROC-AUC 0.9598** (tuned, `beta_multiplier=4.0` — the validation search
+found this hyperparameter barely matters here, val AUC 0.9589-0.9592 across the
+whole {0.5,1.0,1.5,2.5,4.0} grid, a genuine near-null result), AP 0.6275.
+`forest_frac_baseline` alone is now the single top Gini-importance feature.
+Spatial-block CV (2°×2°, matching CDR-PINN's Track B1) scores RF 0.9498±0.0035,
+MaxEnt 0.9465±0.0054 — this pipeline's spatial-generalization numbers for both
+classical baselines. Full before/after numbers:
+`Integrated_Analysis/Model_Outputs/rf_hp_search_result.json`,
+`Integrated_Analysis/Model_Outputs/maxent_hp_search_result.json`,
 `Integrated_Analysis/Model_Outputs/Model_Comparison_SpatialBlockCV.csv`.
 
 ### Reproducibility check
