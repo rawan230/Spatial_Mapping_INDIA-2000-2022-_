@@ -366,20 +366,22 @@ final checkpoint — genuine 65/15/20 train/val/test split, validated weight dec
 AUC. Essentially unchanged from the original ad-hoc 0.9406, but now properly
 validated rather than a fixed-epoch-budget result.)*
 
-**Generalization across four tracks** (the honest, mixed picture; B1–B3 numbers
-below predate the standard protocol/leakage fix and have not yet been re-run
-against the current checkpoint):
+**Generalization across four tracks** (the honest, mixed picture; B1–B3 re-run
+2026-08-23 with genuine validation-set-driven early stopping — validation carved
+from each fold's/track's own train portion only, test untouched, checkpoint
+selected on validation AUC, patience=4 — replacing the earlier fixed-epoch-budget
+runs that had no validation monitoring at all):
 
 | Track | Description | AUC |
 |---|---|---:|
 | A | Random split (full CDR, standard protocol) | 0.9398 |
-| B1 | 2°×2° spatial block CV, 3 folds | 0.7538 ± 0.0162 |
-| B2 | Leave-one-region-out, 6 KMeans regions | 0.5989 ± 0.0815 (one region below chance) |
-| B3 (novel) | Leave-years-out | **0.8967** |
+| B1 | 2°×2° spatial block CV, 3 folds | 0.7510 ± 0.0182 |
+| B2 | Leave-one-region-out, 6 KMeans regions | 0.6187 ± 0.0680 (weakest region 0.5387, still above chance) |
+| B3 (novel) | Leave-years-out | **0.8960** |
 
 **RF/MaxEnt's own spatial-block CV, added 2026-08-22, closing an earlier apples-to-
 oranges gap**: identical 2°×2° `GroupKFold` scheme as Track B1 — **Random Forest
-0.9497 ± 0.0033, MaxEnt 0.9455 ± 0.0050**, both far above CDR-PINN's own 0.7538. This
+0.9497 ± 0.0033, MaxEnt 0.9455 ± 0.0050**, both far above CDR-PINN's own 0.7510. This
 is an honest, consequential finding, not favorable to CDR-PINN: even under a fair
 spatial-generalization comparison, classical ML clearly outperforms the physics-
 informed model, not just on the random split.
@@ -407,15 +409,18 @@ dominates the trained operator almost completely.
 |---|---|---|
 | Permutation importance (shuffle, measure AUC drop) | AUC 0.9398→0.7131 (−0.227, 24.1%) | ~0.0000 |
 | Response curves (marginal-effect sweep) | Δ0.4611 | Δ0.0002–0.0037 |
-| Jackknife, "without-X" (retrain, remove X, corrected forest_frac) | AUC 0.9406→0.7503 (−0.190) | ±0.005 (noise) |
-| Jackknife, "only-X" (retrain, X alone, corrected forest_frac) | AUC=0.9392 (within 0.0014 of full model) | 0.39–0.78 |
+| Jackknife, "without-X" (retrain, remove X, corrected forest_frac, validation-early-stopped) | AUC 0.9397→0.8027 (−0.1370) | −0.0032–+0.0006 (noise) |
+| Jackknife, "only-X" (retrain, X alone, corrected forest_frac, validation-early-stopped) | AUC=0.9399 (within 0.0002 of full model) | 0.59–0.79 |
 
-A model trained on elevation *alone* nearly reproduces the full 7-covariate
-model's accuracy — striking, real evidence, but flagged honestly as a possible
-shortcut-learning limitation at this training scale, not purely a triumph (the
-other six covariates are not informationally useless — most score meaningfully
-above chance alone — they simply add little on top of a dominant topographic
-signal).
+Jackknife re-run 2026-08-23 with genuine validation-set-driven early stopping
+(patience=4, validation carved from each retrain's own train portion, test
+untouched); all-variables baseline AUC=0.9397, a separate figure from Track A's
+own 80-epoch standard-protocol number (0.9398) since the two use different epoch
+budgets. A model trained on elevation *alone* nearly reproduces the full
+7-covariate model's accuracy — striking, real evidence, but flagged honestly as a
+possible shortcut-learning limitation at this training scale, not purely a triumph
+(the other six covariates are not informationally useless — all score above
+chance alone — they simply add little on top of a dominant topographic signal).
 
 **Diagnostic robustness of the Track-A accuracy gap to RF/MaxEnt**: seven distinct
 interventions have now been tested rather than assumed, to determine whether the
@@ -457,7 +462,7 @@ GB available.
 
 **Impact**: CDR-PINN does not currently beat RF/MaxEnt on raw Track-A accuracy, and
 — as of the 2026-08-22 spatial-block CV addition — clearly does not match RF/MaxEnt
-on spatial generalization either (CDR-PINN 0.754 vs. RF 0.950/MaxEnt 0.946 on an
+on spatial generalization either (CDR-PINN 0.7510 vs. RF 0.950/MaxEnt 0.946 on an
 identical fold scheme), closing an earlier open question with an honest,
 unfavorable answer rather than leaving it ambiguous. What it does demonstrate,
 which nothing else in this literature does: (1) a mechanistic, falsifiable,

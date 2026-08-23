@@ -199,8 +199,8 @@ shouldn't touch.
    well-posedness, architecture, training scheme). Implementation
    (`Physics_Informed_FireRisk_Model/cdr_pinn/`) is real, GPU-verified, and fully
    tested as of 2026-08-21: term-ablation (AUC 0.60 diffusion-only → 0.94 full CDR),
-   all four generalization tracks (temporal strong at 0.897, spatial weak at
-   0.60–0.75), all three of Biswas et al.'s variable-understanding analyses
+   all four generalization tracks (temporal strong at 0.8960, spatial weak at
+   0.62–0.75), all three of Biswas et al.'s variable-understanding analyses
    reproduced (permutation importance, response curves, Jackknife retraining — all
    converge on near-total elevation dominance, six independent lines of evidence as
    of the 2026-08-22 re-verification), and six tuning-side interventions
@@ -216,9 +216,14 @@ shouldn't touch.
    unchanged from the original ad-hoc 0.9406 but now properly validated. **Also
    2026-08-22: RF/MaxEnt got their own spatial-block CV** (matching CDR-PINN's Track
    B1 exactly) — RF 0.9497±0.0033, MaxEnt 0.9455±0.0050, both far above CDR-PINN's
-   own 0.7538, closing an earlier apples-to-oranges comparison gap with an honest,
+   own 0.7510, closing an earlier apples-to-oranges comparison gap with an honest,
    unfavorable-to-the-PINN answer: temporal generalization (Track B3), not spatial,
-   is CDR-PINN's one clear generalization advantage. Full writeup:
+   is CDR-PINN's one clear generalization advantage. **2026-08-23: B1/B2/B3 and the
+   15-run Jackknife test got the same validation-driven early-stopping upgrade as
+   the standard protocol** (validation carved from each fold's own train portion,
+   test untouched, patience=4) — current numbers: B1 0.7510±0.0182, B2 0.6187±0.0680,
+   B3 0.8960; Jackknife's own re-confirmed headline finding is unchanged (near-total
+   elevation dominance). Full writeup:
    `CDR_PINN_Full_Paper_Draft.md`, `CDR_PINN_Methodology_Section.md`,
    `CDR_PINN_Novelty_Comparison_Advantages.md`, `CDR_PINN_Study_Clarifications_QA.md`
    (all project root).

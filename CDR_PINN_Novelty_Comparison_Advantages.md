@@ -145,7 +145,7 @@ generalized better than Random Forest under spatial CV in that prior study
 testing whether CDR-PINN's own physics constraint would add a further, separable
 improvement on top of it. **CDR-PINN's own spatial-block CV, now directly measured
 and compared against RF/MaxEnt's own new spatial-block CV on the identical fold
-scheme (§4a below), shows the opposite**: CDR-PINN scores 0.7538, RF scores 0.9501,
+scheme (§4a below), shows the opposite**: CDR-PINN scores 0.7510, RF scores 0.9501,
 MaxEnt scores 0.9455. Whatever architecture-level spatial-generalization advantage
 Step 8's simpler models showed did not carry over to CDR-PINN at this training
 scale — an honest, load-bearing correction to this section's original motivating
@@ -155,10 +155,14 @@ premise, not a footnote to bury.
 
 The four-track validation plan referenced throughout this document is now complete,
 not aspirational. Full table and discussion: `CDR_PINN_Methodology_Section.md` §8.
-Summary, stated plainly rather than favorably: Track A (random split, standard
-protocol, 0.9398) and Track B3 (leave-years-out, 0.8967) hold up well; Track B1
-(spatial block CV, 0.7538 ± 0.0162) and Track B2 (leave-one-region-out, 0.5989 ±
-0.0815, one region below chance) are genuinely weak at this training scale — and, as
+**Re-run 2026-08-23 with genuine validation-set-driven early stopping** (validation
+carved from each fold's/track's own train portion, test untouched, checkpoint
+selected on validation AUC, patience=4) — the numbers below reflect that corrected
+protocol, replacing the earlier fixed-epoch-budget runs. Summary, stated plainly
+rather than favorably: Track A (random split, standard protocol, 0.9398) and Track B3
+(leave-years-out, 0.8960) hold up well; Track B1 (spatial block CV, 0.7510 ± 0.0182)
+and Track B2 (leave-one-region-out, 0.6187 ± 0.0680, weakest region 0.5387, still
+above chance) are genuinely weak at this training scale — and, as
 of 2026-08-22, demonstrably weak *relative to classical ML on the same fold scheme*,
 not just weak in absolute terms: RF scores 0.9497 ± 0.0033 and MaxEnt scores 0.9455
 ± 0.0050 on the identical Track B1 blocks. This closes the earlier open question

@@ -95,7 +95,7 @@ MaxEnt — that should be stated plainly, not buried. What it contributes instea
    corresponds to a physical mechanism, not just a statistical association.
 2. **Temporal generalization**: the only one of the three models in this study
    capable of being evaluated on leave-years-out generalization at all (Track B3,
-   AUC=0.897), since RF/MaxEnt have no year-resolved feature table. This is a
+   AUC=0.8960), since RF/MaxEnt have no year-resolved feature table. This is a
    genuinely unique capability for early-warning-relevant susceptibility mapping,
    where predicting *future* years from *past* training data is closer to the
    actual deployment scenario than a random pixel split.
@@ -125,7 +125,7 @@ MaxEnt — that should be stated plainly, not buried. What it contributes instea
   (this study's own RF/MaxEnt replications beat Biswas et al.'s reported numbers,
   and CDR-PINN trails those). On **spatial** generalization specifically, this
   study's own RF/MaxEnt (now with a genuine spatial-block CV number, 0.95/0.95) beat
-  CDR-PINN (0.75) decisively — an honest, unfavorable-to-CDR-PINN finding that
+  CDR-PINN (0.7510) decisively — an honest, unfavorable-to-CDR-PINN finding that
   should be stated as plainly as the favorable ones.
 
 ## Completeness Audit: Gaps Found

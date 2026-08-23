@@ -34,10 +34,28 @@ class imbalance; fixed with `pos_weight≈43`.
 | B3 | Leave-years-out (novel) | temporal | No | 80 | 0.8967 | 2026-08-20 |
 | Data-efficiency | No-physics vs. physics, identical sparse data, Track A split | 80/20 | No | 80 | No-physics 0.9463 vs. physics 0.9406 | 2026-08-20 |
 
-**Status as of this log**: B1/B2/B3 and the data-efficiency test above still reflect
-the pre-leakage-fix, pre-standard-protocol model — a fresh re-run (with a
-physics-vs-no-physics comparison added to B1/B2/B3 specifically, previously only
-done for Track A) is in progress, see section E below.
+**Status as of this log (updated 2026-08-23)**: the table above is the original
+2026-08-20 run and is kept as a historical record. B1/B2/B3 have since been re-run
+with genuine validation-set-driven early stopping — see A2b immediately below and
+the completed section E. The data-efficiency test row still reflects the
+pre-leakage-fix, pre-standard-protocol model and has not been re-run.
+
+### A2b. B1/B2/B3 re-run with genuine validation-set-driven early stopping (`run_validation_tracks.py`, 2026-08-23)
+
+Each fold/track now carves validation pixels or years out of its own train portion
+only (the test fold/years are never touched), tracks best validation AUC, and
+early-stops with patience=4 — closing the gap flagged in section D below (B1/B2/B3
+previously had no validation-set monitoring at all).
+
+| Track | Description | ROC-AUC | Detail | Date |
+|---|---|---:|---|---|
+| B1 | 2°×2° spatial block CV, 3 folds | 0.7510 ± 0.0182 | folds: 0.7768, 0.7395, 0.7368 | 2026-08-23 |
+| B2 | Leave-one-region-out, 6 KMeans regions | 0.6187 ± 0.0680 | regions: 0.5387, 0.6805, 0.5506, 0.7301, 0.6157, 0.5970 | 2026-08-23 |
+| B3 | Leave-years-out | 0.8960 | AP=0.1445; test years 2000/2008/2009/2015 | 2026-08-23 |
+
+These figures supersede the A2 table's B1/B2/B3 row for every current-state
+reference in this project's docs; A2's original numbers remain in place above only
+as the historical, pre-fix record.
 
 ### A3. Reviewer-defense diagnostics — closing the Track-A accuracy gap to RF/MaxEnt
 
@@ -89,6 +107,25 @@ reverse-causality risk) but empirically low-impact for these specific diagnostic
 | Forest fraction | 0.9406 | −0.0000 | 0.7011 | +0.2011 |
 | Dryness proxy | 0.9395 | −0.0011 | 0.5233 | +0.0233 |
 | NDVI anomaly | 0.9415 | −0.0009 | 0.3874 | −0.1126 |
+
+### A6b. Jackknife re-run with genuine validation-set-driven early stopping (`jackknife_test.py`, 2026-08-23)
+
+Same 40-epoch budget and 80/20 split as A6, but each of the 15 retrains now carves
+validation pixels out of its own train portion (test untouched), tracks best
+validation AUC, and early-stops with patience=4 — the A6 table above is kept as the
+historical pre-fix record; this table is the current one. All-variables baseline
+AUC=**0.9397** (not the same figure as A7's 0.9398 Track A standard-protocol
+number — different epoch budgets, kept separate).
+
+| Covariate | Without-X AUC | Drop | Only-X AUC | Gain alone |
+|---|---:|---:|---:|---:|
+| Elevation | 0.8027 | −0.1370 | 0.9399 | +0.4399 |
+| NDVI (baseline) | 0.9380 | −0.0017 | 0.7177 | +0.2177 |
+| Slope | 0.9365 | −0.0032 | 0.7665 | +0.2665 |
+| Distance to roads | 0.9372 | −0.0025 | 0.7880 | +0.2880 |
+| Forest fraction | 0.9402 | +0.0006 | 0.7233 | +0.2233 |
+| Dryness proxy | 0.9400 | +0.0004 | 0.5903 | +0.0903 |
+| NDVI anomaly | 0.9386 | −0.0010 | 0.5911 | +0.0911 |
 
 ### A7. Standard protocol adoption — final canonical run (`train_standard_protocol.py`)
 
@@ -161,21 +198,25 @@ separate split). This mirrors standard nested-CV practice.
 - **The switch to genuine validation-set-driven decisions happened in two places**:
   CDR-PINN's `train_standard_protocol.py` (A7, the current canonical model) and
   Step 7's `hp_search_rf.py` (B, the final tuned RF).
+- **Converted to validation-set-driven protocol as of 2026-08-23**: CDR-PINN's
+  B1/B2/B3 tracks (A2b) and the Jackknife test (A6b) now carve validation
+  pixels/years out of each fold's/retrain's own train portion, with early stopping
+  (patience=4) on validation AUC — see section E for the completed re-run.
 - **Not yet converted to validation-set-driven protocol**: MaxEnt's hyperparameters
-  (still untuned defaults), CDR-PINN's B1/B2/B3 tracks (still the original 80/20-
-  style split logic, no validation carve-out — see section E, in progress), the
-  Jackknife test (still 80/20, no validation set — a deliberate scope decision
-  given its 15-retrain cost).
+  (still untuned defaults).
 
 ---
 
-## E. In progress as of this log (not yet complete — will be appended)
+## E. Completed 2026-08-23 — B1/B2/B3 and Jackknife re-run with validation-driven early stopping
 
-Re-running Track B1/B2/B3 fresh against the corrected data, with a physics-vs-
-no-physics comparison added to each track (previously only done for Track A) —
-`run_validation_tracks.py`, modified 2026-08-22 to thread `use_physics` through
-all three track functions. Results not yet available; this log will be updated
-once they land.
+The re-run flagged as "in progress" in earlier versions of this log is now
+complete: `run_validation_tracks.py` (B1/B2/B3, results in A2b) and
+`jackknife_test.py` (results in A6b) both now carve validation pixels/years out of
+each fold's/retrain's own train portion only, track best validation AUC, and
+early-stop with patience=4, closing the validation-monitoring gap flagged in
+section D. The physics-vs-no-physics comparison on the harder B1/B2/B3 splits
+(as opposed to just Track A) remains not yet performed — that is a separate,
+still-open item.
 
 ---
 
