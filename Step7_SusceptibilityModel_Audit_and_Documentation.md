@@ -34,7 +34,7 @@ Both drop modestly from their random-split numbers (RF: 0.9687 → 0.9501, a 1.9
 | **25 / 3 (winner)** | **0.9694** | **0.6933** |
 | 20 / 10 | 0.9680 | 0.6781 |
 
-Refitting the winner and touching test once: **test ROC-AUC 0.9701, AP 0.6961** (`rf_hp_search_result.json`, `hp_search_rf.log`).
+Refitting the winner and touching test once: **test ROC-AUC 0.9698, AP 0.6961** (`rf_hp_search_result.json`) — this is `hp_search_rf.py`'s own 65/15/20-split test number; the notebook's subsequent full retrain on its own 80/20 split (§ below) scores a close but not identical 0.9704.
 
 ## Why It Was Done This Way
 
@@ -59,7 +59,7 @@ The notebook and README are explicit that no numeric AUC from Biswas et al. (202
    the same pattern, `hp_search_maxent.py`) is likewise wired into every MaxEnt
    instantiation in the notebook. `METHODOLOGY.md`'s claim is now accurate, not
    aspirational.
-2. **Tuned-vs-untuned comparison is buried.** The 4-row grid comparison exists only in `rf_hp_search_result.json` and a plain-text `hp_search_rf.log` — there is no plot, table, or notebook cell a reader would encounter without knowing to look for these two files.
+2. **Tuned-vs-untuned comparison is buried.** The 4-row grid comparison exists only in `rf_hp_search_result.json` — there is no plot, table, or notebook cell a reader would encounter without knowing to look for this file.
 3. **No confusion-matrix plot.** Confusion matrices for both RF and MaxEnt are computed and printed as raw arrays (Cells 14, 24) but never rendered as a heatmap image — every other major result (ROC/PR, feature importance, maps) has a saved PNG; the confusion matrix does not.
 4. **No spatial-block-CV map visualization.** Nothing plots the 116 2°×2° blocks or which ones fell into which of the 3 `GroupKFold` folds — a reader cannot see whether the folds are geographically balanced (e.g., whether one fold happens to concentrate in a specific region), even though the per-fold fire-rate numbers printed (5.0%–9.0%) suggest real regional imbalance across folds.
 5. **No persisted three-model comparison table/figure.** The RF-vs-MaxEnt-vs-CDR-PINN spatial-block comparison is computed and printed (Cell 29) and stored in the JSON report's `spatial_block_cv` key, but `Model_Comparison_SpatialBlockCV.csv` itself only contains RF/MaxEnt rows — CDR-PINN's Track B1 (0.7510, hardcoded as `CDR_PINN_TRACK_B1_AUC`) is never appended as a row, so there is no single saved artifact a co-author could open and see all three models' spatial AUCs side by side without reading console output.
