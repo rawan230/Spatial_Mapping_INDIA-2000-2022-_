@@ -125,6 +125,26 @@ spatial join.
 
 ## 2. Step 1: Fire Point Extraction
 
+**Figure 1.** The study area and its land cover, reproducing Biswas et al. (2025) Fig. 1,
+built from this project's own real, unclipped C3S-LCCS 2022 regional raster (lat 6.00–37.50°N,
+lon 67.50–98.00°E — the first figure in this pipeline to use that raw file directly rather
+than a downstream India-masked product).
+
+![Figure 1a: study area and nearby region, classified into 7 LULC types](Biswas_Comparison_Figures/Fig01a_StudyArea_LULC.png)
+
+*(a) The study area and nearby region (India, Pakistan, Nepal, Bangladesh, Myanmar, Sri Lanka)
+with different land cover types, reclassified into Biswas et al.'s 7-category LULC legend via
+this project's own disclosed LCCS-code crosswalk — "Forestland" reuses Step 1's own 13-code
+`FOREST_CODES` definition for internal consistency rather than a second, one-off definition.*
+
+![Figure 1b: forest type map of India, 2022](Biswas_Comparison_Figures/Fig01b_ForestType_2022.png)
+
+*(b) The forest type map of India for 2022 — this project's own study-end year, rather than
+duplicating Biswas et al.'s 2001/2020 panel pair. All 11 forest subclasses in their Fig. 1
+legend are genuinely present in India's real 2022 raster (confirmed via a full-resolution
+histogram), dominated by broadleaved deciduous (924,901 px) and broadleaved evergreen
+(657,773 px) cover.*
+
 The raw MODIS Collection 6.1 FIRMS archive for the India region
 (`fire_archive_M-C61_772720.csv`) contains **2,804,373** raw detections spanning 2000–2022. This
 is reduced to the pipeline's ground-truth fire-point set through a fixed sequence of filters:
