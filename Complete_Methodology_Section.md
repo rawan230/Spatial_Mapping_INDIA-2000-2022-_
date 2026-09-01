@@ -78,15 +78,35 @@ pixels** (32.6% of the 12,758,064-cell full grid), the exact figure reproduced i
 Steps 2, 6, and 7.
 
 Fire points are placed onto every raster grid in the pipeline by one shared method — direct
-**affine pixel-lookup**, not a nearest-neighbor spatial join:
+**affine pixel-lookup**, not a nearest-neighbor spatial join. The general GDAL/rasterio
+geotransform maps pixel indices to geographic coordinates via six coefficients:
+
+$$
+x = a\cdot\text{col} + b\cdot\text{row} + c, \qquad
+y = d\cdot\text{col} + e\cdot\text{row} + f
+$$
+
+| Coefficient | Meaning |
+|---|---|
+| $a$ | pixel width — change in $x$ (longitude) per step in `col` |
+| $b$ | row rotation/shear — change in $x$ per step in `row` |
+| $c$ | $x$-coordinate of the upper-left corner of the upper-left pixel (origin longitude) |
+| $d$ | column rotation/shear — change in $y$ per step in `col` |
+| $e$ | pixel height — change in $y$ (latitude) per step in `row` (negative: row increases downward, latitude decreases southward) |
+| $f$ | $y$-coordinate of the upper-left corner of the upper-left pixel (origin latitude) |
+
+$b$ and $d$ are the shear/rotation terms, nonzero only for a raster skewed relative to true
+north. Every raster in this pipeline (MODIS, ESA-CCI, FLDAS, SRTM, all reprojected to plain
+EPSG:4326) is a standard north-up, axis-aligned grid, so $b=d=0$ identically — confirmed
+directly from the integrated stack's own transform ($a=0.01,\ b=0.00,\ c=68.20,\ d=0.00,\
+e=-0.01,\ f=37.09$). With $b=d=0$ the two equations decouple ($x=a\cdot\text{col}+c$,
+$y=e\cdot\text{row}+f$) and invert directly to the pixel-lookup formula actually used:
 
 $$
 \text{col} = \operatorname{round}\!\left(\frac{\text{lon} - c}{a}\right), \qquad
 \text{row} = \operatorname{round}\!\left(\frac{\text{lat} - f}{e}\right)
 $$
 
-where $(a,b,c,d,e,f)$ are the raster's own affine transform coefficients (or, equivalently, the
-grid's first coordinate and per-axis step size read directly from its own coordinate arrays).
 This is exact for the regular lat/lon grids used throughout (ESA-CCI/C3S, NDVI, LST, FLDAS,
 terrain, accessibility) and trivially vectorizes on GPU, in contrast to a `geopandas`/`shapely`
 spatial join.
