@@ -895,6 +895,19 @@ model.)
 
 ### 9.5 Neural operator architecture
 
+![CDR-PINN architecture: PINO/FNO backbone plus the three physics heads and the four-term adaptive loss](Physics_Informed_FireRisk_Model/CDR_PINN_Data/cdr_pinn_architecture_diagram.png)
+
+*The one-step operator $G_\theta(u_t, a_t) \to u_{t+1}$ (top) lifts the 8-channel input (7
+covariates + the current state $u_t$) to 32 channels, passes it through 4 stacked Fourier blocks
+(each a truncated $16\times16$-mode spectral convolution summed with a $1\times1$-conv skip
+connection, GELU-activated), and projects back to a single output channel. In parallel, three
+small physics heads (green, bottom-left) read subsets of the same covariates directly — bypassing
+the operator entirely — to produce the diffusivity $D$, the advection velocity $\mathbf{v}$, and
+the reaction rate $\rho$ that assemble the CDR PDE residual (orange). The total loss (red) combines
+this PDE residual with data, boundary, and initial-condition terms under gradient-norm-balanced
+adaptive weights (Wang, Teng & Perdikaris, 2021). Every number shown is read directly from
+`model.py`/`preprocessing.py`/`train_standard_protocol.py`, not illustrative.*
+
 A Fourier Neural Operator (FNO; Li et al., 2023) backbone, not a pointwise coordinate-MLP PINN
 (Raissi et al., 2019), chosen because the training data is structurally a family of 265 monthly
 instances sharing one fixed spatial domain — exactly the regime operators amortize across — and
