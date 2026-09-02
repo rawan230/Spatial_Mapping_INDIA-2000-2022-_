@@ -1112,6 +1112,35 @@ $0.9498\pm0.0035$, MaxEnt $0.9465\pm0.0054$** (§8.4) — are far above CDR-PINN
 ($0.7510$), a materially stronger spatial-generalization result for the classical baselines on
 this specific protocol, reported as an unfavorable-to-CDR-PINN finding rather than omitted.
 
+**Train-vs-validation AUC diagnostic — localizing the B1/B2 failure.** Added 2026-09-02,
+extending the same per-checkpoint train-AUC tracking already used for the 22-year-vs-20-year
+ablation (§10.1) to every B1/B2/B3 fold/region, by scoring the same validation-time rollout
+against the training pixels as well (no extra compute cost).
+
+![Train-vs-validation AUC trajectories for Tracks B1, B2, and B3](Physics_Informed_FireRisk_Model/CDR_PINN_Data/cdr_pinn_tracks_train_val_auc.png)
+
+*Solid lines: train AUC. Dashed lines: validation AUC (held-out pixels/months carved from the
+same training blocks/regions/years, never the final test split). One line pair per fold/region.*
+
+This resolves an ambiguity the headline B1/B2 numbers alone could not: **is the low test AUC
+overfitting, or an out-of-distribution transfer failure?** The two have different fixes
+(regularization vs. a fundamentally different architecture/feature set), so the distinction
+matters. The answer is unambiguous — B1's three folds finish at train/val AUC pairs of
+$(0.948, 0.939)$, $(0.956, 0.936)$, $(0.963, 0.936)$; B2's six regions are similarly tight,
+train/val gaps of only $+0.009$ to $+0.027$ throughout. **Train and validation AUC track each
+other closely and both stay high (0.93–0.96) for the entire run** — the model is not
+overfitting the training pixels in any classical sense. The failure is entirely between
+validation (held-out pixels *from the same spatial blocks/regions the model trained on*) and
+test (pixels from spatial blocks/regions never seen at all): AUC collapses from $\sim$0.94 to
+$0.70$–$0.78$ (B1) or $0.54$–$0.73$ (B2) at that boundary alone. This is a genuine
+out-of-distribution generalization failure, not a fitting problem — consistent with, and now
+directly evidenced rather than merely inferred from, the headline B1/B2-vs-RF/MaxEnt comparison
+above. Track B3 shows the opposite pattern: train ($0.896$) and validation ($0.899$) AUC are
+already near-identical to the eventual test AUC ($0.896$) throughout training, with no
+train/val gap at all (val is if anything marginally *above* train, consistent with noise at
+this run count) — the temporal axis simply does not have the distribution-shift problem the
+spatial axis does.
+
 **Term-ablation study.** Three configurations (diffusion-only, diffusion+advection, full CDR),
 trained identically (80 epochs, `width=32`, 4 spectral layers, `16×16` modes, Adam `lr=1e-3`,
 pre-standard-protocol, no validation set), evaluated on an identical held-out 20% random-pixel
@@ -1152,7 +1181,24 @@ essentially converged well before 80 epochs. Elevation is the only covariate who
 meaningfully hurts the model (drop $=-0.1370$); elevation alone reaches AUC $=0.9399$, within
 $0.0002$ of the full model. Every other covariate still scores above chance in isolation
 ($0.59$–$0.79$), so none are informationally useless — they simply add negligible marginal signal
-once elevation is present. Permutation importance and response-curve analyses, re-run against
+once elevation is present.
+
+**Train-vs-validation AUC check across all 15 retrains.** Added 2026-09-02, same
+zero-extra-cost tracking as the B1/B2/B3 diagnostic above, applied here to confirm the
+Jackknife importance ranking isn't confounded by some retrains overfitting more than others
+(a real risk in a 15-run sweep with a fixed reduced epoch budget).
+
+![Jackknife: final train vs. validation AUC and the train-val gap, all 15 retrains](Physics_Informed_FireRisk_Model/CDR_PINN_Data/cdr_pinn_jackknife_train_val_auc.png)
+
+*Top: final train and validation AUC for each of the 15 retrains. Bottom: the train$-$val AUC
+gap per retrain.* Every retrain's gap falls in a narrow $+0.008$ to $+0.028$ band regardless of
+which covariate is held out or held alone — including the `all` baseline ($+0.025$) and the
+`without_elevation`/`only_elevation` pair ($+0.011$/$+0.022$) whose large AUC swing drives the
+headline finding. The AUC differences between covariates in the table above track a real
+information-content signal, not an artifact of some retrains being stopped further from
+convergence than others.
+
+Permutation importance and response-curve analyses, re-run against
 the same final canonical checkpoint (entry A8): elevation's permutation-importance drop
 $=0.2268$ (24.13% of baseline AUC $0.9398$), response-curve $\Delta=0.4611$. Together with the
 term-ablation's advection-term jump and Step 5a's own field measurement, this constitutes six

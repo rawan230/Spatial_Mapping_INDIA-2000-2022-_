@@ -288,8 +288,49 @@ load-bearing for the paper.
 
 ---
 
-*Compiled 2026-08-22. Every number above traces to a real executed run (JSON
-result files in `Physics_Informed_FireRisk_Model/CDR_PINN_Data/` and
+## G. Train-vs-Validation AUC Diagnostic, Extended to B1/B2/B3 and Jackknife (2026-09-02)
+
+The train-AUC tracking already added to Section F's 22yr/20yr ablation
+(`train_standard_protocol.py`/`train_20yr_subset.py`) was extended to
+`run_validation_tracks.py` (B1/B2/B3) and `jackknife_test.py`: both refactored so
+each validation-checkpoint rollout is scored against the training mask as well as
+the validation mask (`compute_rollout()`/`score_from_rollout()`, same pattern as
+Section F — one rollout per checkpoint, no added cost). All four tracks re-run in
+full (B1/B2/B3 at their original epoch budgets, Jackknife's 15 runs at 40 epochs)
+to populate the new `train_auc_history`/`val_auc_history` fields.
+
+**Reproducibility, a fourth independent confirmation**: every headline number
+reproduced exactly — B1 `0.7510±0.0182` (folds 0.7768/0.7395/0.7368), B2
+`0.6187±0.0680` (regions 0.5387/0.6805/0.5506/0.7301/0.6157/0.5970), B3 `0.8960`,
+Jackknife's elevation-dominance table (elevation drop `-0.1370`, gain-alone
+`+0.4399`, both far larger than any other covariate) — byte-identical to the
+2026-08-23 entries (A2b/A6b) despite full retraining from scratch.
+
+**The actual new finding — B1/B2's failure is out-of-distribution transfer, not
+overfitting.** All B1 folds and B2 regions finish training with train AUC and
+validation AUC close together and both high (0.93–0.96, gaps of only +0.009 to
++0.027) — directly ruling out classical overfitting as the explanation for the
+weak test-set numbers. The entire collapse happens strictly at the
+validation→test boundary (held-out-within-block pixels vs. genuinely unseen
+blocks/regions): AUC drops from ~0.94 to 0.70–0.78 (B1) or 0.54–0.73 (B2) there
+alone. Track B3 shows no such gap (train 0.896, val 0.899, test 0.896, all
+close) — the distribution-shift problem is specific to the spatial axis.
+Figure: `cdr_pinn_tracks_train_val_auc.png`.
+
+**Jackknife sanity check**: all 15 retrains' train−val AUC gaps fall in a narrow
++0.008 to +0.028 band regardless of which covariate is held out or held alone,
+confirming the importance-ranking table isn't confounded by some retrains
+overfitting more than others. Figure: `cdr_pinn_jackknife_train_val_auc.png`.
+
+Scripts: `run_validation_tracks.py`, `jackknife_test.py`,
+`plot_tracks_jackknife_train_auc.py`, all in
+`Physics_Informed_FireRisk_Model/cdr_pinn/`.
+
+---
+
+*Compiled 2026-08-22, updated 2026-09-02 (Section G). Every number above traces
+to a real executed run (JSON result files in
+`Physics_Informed_FireRisk_Model/CDR_PINN_Data/` and
 `Integrated_Analysis/Model_Outputs/`, or a real notebook cell output) — none are
 estimated or illustrative. Use this as the raw source when deciding what belongs
 in the paper's actual Methodology section — not everything here needs to appear
