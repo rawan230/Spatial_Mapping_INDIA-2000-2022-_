@@ -228,6 +228,66 @@ still-open item.
 
 ---
 
+## F. 22-Year Record vs. Biswas et al.'s 20-Year Study Period — Training-Data-Volume Ablation (2026-09-02)
+
+Motivation: this study's record spans Nov 2000–Dec 2022 (266 months, ~22 years),
+2 years longer than Biswas et al.'s 2001–2020 (240 months). Does that extra data
+actually help CDR-PINN, or is it just a longer label window with no measurable
+benefit? Tested directly, not assumed.
+
+**Design** (`train_20yr_subset.py`, `eval_fullmodel_on_20yr_window.py`,
+`plot_22yr_vs_20yr_ablation.py`, all in `Physics_Informed_FireRisk_Model/cdr_pinn/`):
+a controlled, single-variable comparison. Both models share the exact same
+architecture (WIDTH=32, N_LAYERS=4, MODES=16), the exact same seed=42 65/15/20
+pixel split (byte-identical train/val/test partition), the exact same validated
+weight_decay, AdamW, `ReduceLROnPlateau`, and validation-AUC-driven early stopping
+(patience=4) — the *only* thing that differs is how many months of data each model
+trains on, and both are scored against the **same** target (fire occurrence within
+2001–2020) on the **same** held-out test pixels:
+
+- **Model A** — the existing full-period checkpoint (`cdr_pinn_full_cdr_standard_
+  protocol.pt`, entry A7), trained on all 266 months. Not retrained — its own
+  already-computed rollout is simply re-scored, restricting the LSE-pool (τ=5.0)
+  to just the 240 months of its trajectory that fall in 2001–2020, against a
+  `fire_ever` label recomputed for that same window (so the 2 extra years can't
+  leak into either the score or the target).
+- **Model B** — a fresh CDR-PINN trained from scratch on *only* the 2001–2020
+  slice (240 months, indices 2:242 of the full stack), with its own window-local
+  `fire_ever_2001_2020` label and its own u₀=0 origin at Jan 2001.
+
+| Model | Trained on | Evaluated on | Test ROC-AUC | Test AP |
+|---|---|---|---:|---:|
+| A (existing, re-scored) | 22 years (266 mo) | 2001–2020 target | 0.9380 | 0.9103 |
+| B (freshly trained) | 20 years (240 mo) | 2001–2020 target | **0.9404** | **0.9123** |
+| *(for reference)* A on its own target | 22 years (266 mo) | 22-year target | 0.9398 | 0.9223 |
+
+**Honest result: no measurable accuracy advantage from the extra 2 years on this
+specific, controlled comparison.** ΔAUC = +0.0024 in *favor* of the 20-year model
+— the opposite direction from what would make a clean "22 years beats 20" case,
+and small enough to be within single-seed noise (this project's own multi-seed
+Track A spread is ±0.0017–0.002; a single-seed run of either model isn't
+distinguishable from the other at this delta). Reported exactly as measured,
+consistent with this study's standing rigor practice of disclosing negative and
+null results rather than only favorable ones (see Novelty §11.5).
+
+**What genuinely does differ, and is a real, separate finding**: the 22-year
+record captures **9,161** distinct fire-affected pixels (`fire_ever=1`) vs.
+**8,676** for the 2001–2020 window alone — **+485 pixels, +5.59%** more of
+India's actual fire-prone geography represented in the label itself, independent
+of any model's accuracy on either target. This is the honest, defensible form of
+"the 22-year record adds value": broader geographic *coverage* of the phenomenon
+being modeled, not a demonstrated CDR-PINN accuracy gain at this training scale
+and single-seed resolution. Figure: `cdr_pinn_22yr_vs_20yr_ablation.png`.
+
+**Caveat, stated plainly**: this is one seed, one architecture configuration. A
+genuine accuracy advantage from more training data could still exist and simply
+not be visible at this scale/seed — the fair conclusion is "not demonstrated here,"
+not "disproven." A multi-seed version of this same ablation (mirroring
+`run_multiseed_track_a`) would be the natural next step if this claim needs to be
+load-bearing for the paper.
+
+---
+
 *Compiled 2026-08-22. Every number above traces to a real executed run (JSON
 result files in `Physics_Informed_FireRisk_Model/CDR_PINN_Data/` and
 `Integrated_Analysis/Model_Outputs/`, or a real notebook cell output) — none are

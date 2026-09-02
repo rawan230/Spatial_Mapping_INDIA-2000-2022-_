@@ -1148,6 +1148,46 @@ as the primary driver of fire-susceptibility discrimination in the current CDR-P
 formulation — a finding the classical RF/MaxEnt baselines' own feature-importance rankings
 (§8) independently corroborate.
 
+### 10.1 Training-data-volume ablation: 22 years (this study) vs. 20 years (Biswas et al.)
+
+This study's fire-point archive spans Nov 2000–Dec 2022 (266 months), 2 years longer than
+Biswas et al.'s 2001–2020 (240 months). Tested directly rather than assumed: a controlled,
+single-variable comparison holding architecture, pixel split (identical seed=42 65/15/20
+partition), and training protocol fixed, varying only the temporal training window, scored
+against the **same** 2001–2020 target on the **same** held-out test pixels for both models.
+
+| Model | Trained on | Evaluated on | Test ROC-AUC | Test AP |
+|---|---|---|---:|---:|
+| 22-year model (existing checkpoint, re-scored, not retrained) | 266 months | 2001–2020 target | 0.9380 | 0.9103 |
+| 20-year model (freshly trained) | 240 months | 2001–2020 target | **0.9404** | **0.9123** |
+| *(reference)* 22-year model on its own full target | 266 months | 2000–2022 target | 0.9398 | 0.9223 |
+
+**Result, reported exactly as measured**: no accuracy advantage from the extra 2 years on
+this controlled comparison — $\Delta\text{AUC}=+0.0024$ in *favor* of the 20-year model,
+within this study's own single-seed noise floor (multi-seed Track A spread: $\pm0.0017$–
+$0.002$). This is a genuine null result for the narrow claim "more training months improves
+CDR-PINN accuracy," disclosed rather than reframed, consistent with this study's standing
+practice of reporting negative findings plainly (§11.5).
+
+What the extra 2 years *do* provide, independent of any model's accuracy: broader coverage
+of the phenomenon itself. The 22-year record's `fire_ever` label captures **9,161** distinct
+fire-affected pixels vs. **8,676** for the 2001–2020 window alone — **+485 pixels (+5.59%)**
+of India's real fire-prone geography represented in the ground truth that a 20-year-restricted
+study structurally cannot see, regardless of what any downstream model does with it. This is
+the defensible form of "the longer record matters" this study can support: label-coverage
+completeness, not a demonstrated CDR-PINN accuracy gain at this training scale and seed count.
+
+![22-year vs 20-year training-data-volume ablation: test AUC/AP comparison and fire-ever label coverage](Physics_Informed_FireRisk_Model/CDR_PINN_Data/cdr_pinn_22yr_vs_20yr_ablation.png)
+
+*Left: test-set ROC-AUC/AP under the controlled comparison (middle vs. right bar; the left
+bar is shown only for reference, on a different target). Right: the real, independent
++5.59% fire-ever coverage gain from the 2 extra years.*
+
+**Caveat, stated plainly**: this is a single seed, one architecture configuration. A genuine
+accuracy advantage from more training data could exist and simply not be visible at this
+scale — the fair conclusion is "not demonstrated here," not "disproven." A multi-seed version
+of this ablation would be the natural next step if this claim needs to be load-bearing.
+
 ## 11. Novelty and Contribution Relative to Biswas et al. (2025)
 
 This project positions itself explicitly as an extension of Biswas, Mahato & Joshi (2025) —
