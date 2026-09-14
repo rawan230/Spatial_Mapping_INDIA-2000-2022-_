@@ -28,3 +28,8 @@ __pycache__/
 # Exception: cross-step comparison figures (draws from multiple steps' data,
 # doesn't belong to any single step's own repo) — no nested .git inside it.
 !Biswas_Comparison_Figures/
+
+# Exception: archive of old/superseded root-level files, kept for history but
+# not current — see old_versions/README.md. No nested .git inside it.
+!old_versions/
+!old_versions/**
