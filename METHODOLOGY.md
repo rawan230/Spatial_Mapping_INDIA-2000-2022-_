@@ -383,8 +383,18 @@ Spearman ρ=0.835, p<0.0001, n=23 years, full Jan–Dec coverage as of the 2026-
 re-run — an earlier Mar-Dec-restricted version of this figure, r=0.824, was superseded
 once the previously-missing Jan/Feb source months downloaded) they didn't attempt, and
 a year-by-year cross-check against their own reported annual fire counts (this
-project's counts run 0.5–2.4% higher across every
-overlapping year 2001–2020, a consistent small offset, not a discrepancy).
+project's counts run 0.5–2.4% higher across every overlapping year 2001–2020, a
+consistent small offset, not a discrepancy).
+
+**Scope caveat, added 2026-09-16**: the r=0.915 figure above is computed across all of
+India's land cover, not forest only, unlike Biswas et al.'s own forest-scoped Fig. 7.
+A forest-masked re-derivation (`Annual_BurnedArea_ForestVsAll.csv`,
+`BurnedArea_ForestMasked_vs_Biswas_Difference.csv`) closes most of a ~6-10x magnitude
+gap this caused: forest-masked burned area is 9,392-51,455 km²/year (2001-2020) vs.
+Biswas et al.'s own ~2,100-17,200 km²/year, correlation improves to r=0.9044, and the
+min/max years now match exactly. A residual ~4x gap remains, disclosed rather than
+forced to close. See `Step1_FirePointExtraction_Audit_and_Documentation.md` for the
+full derivation.
 
 ---
 

@@ -195,7 +195,21 @@ Biswas et al.'s own published annual fire counts:
 - **Pearson $r = 0.915$, Spearman $\rho = 0.835$, $p < 0.0001$, $n = 23$ years** (full
   Jan–Dec coverage per year, re-run 2026-08-20 once previously-missing Jan/Feb source months
   finished downloading — an earlier Mar–Dec-restricted version of this figure, $r=0.824$, is
-  superseded).
+  superseded). **Important scope caveat (2026-09-16):** this figure is computed across
+  **all of India's land cover**, not forest only, which is why its absolute magnitude
+  (24,011–102,978 km²/year, 2001–2020) runs 6–10$\times$ larger than Biswas et al.'s own
+  Fig. 7d (forest-scoped throughout their paper, $\approx$2,100–17,200 km²/year, digitized
+  from their chart). A forest-masked re-derivation (same raw MCD64A1.061 GeoTIFFs, this
+  project's own `FOREST_CODES` mask applied per calendar year) closes most of that gap:
+  9,392–51,455 km²/year, correlation against Biswas et al.'s chart improves to
+  $r=0.9044$, and — unlike the all-land-cover series — its minimum (2002) and maximum
+  (2009) years now match Biswas et al.'s exactly. A residual $\approx$4$\times$ gap
+  remains, disclosed rather than forced to close (plausibly a stricter forest-class
+  definition or extra QA filtering in Biswas et al.'s own unpublished processing). Use
+  $r=0.915$ (all-land-cover) only as the internal fire-point-archive credibility check it
+  was designed for; use the forest-masked series for any direct magnitude comparison
+  against Biswas et al. Full detail: `Step1_FirePointExtraction_Audit_and_Documentation.md`,
+  `Forest_Fire_Outputs/BurnedArea_ForestMasked_vs_Biswas_Difference.csv`.
 - Against Biswas et al.'s own reported annual fire counts, this project's extraction runs
   consistently **0.5–2.4% higher** across all 20 overlapping years (2001–2020) — a small,
   explainable, non-random offset that functions as external validation of the extraction
@@ -1301,7 +1315,11 @@ ways Biswas et al. do not perform for their own presence data:
 
 1. **Correlation against an independent product**: MODIS MCD64A1.061 burned area, Pearson
    $r=0.915$, Spearman $\rho=0.835$, $p<0.0001$, $n=23$ years (§2) — an external check on the
-   fire-point archive's own credibility that has no counterpart in the reference paper.
+   fire-point archive's own credibility that has no counterpart in the reference paper. A
+   forest-masked re-derivation of this same series (§2's scope caveat) also directly
+   confirms, rather than merely infers, that this project's forest-fire archive tracks the
+   same phenomenon Biswas et al.'s own Fig. 7d shows: matching min/max years and
+   $r=0.9044$ against their chart.
 2. **Year-by-year cross-check against Biswas et al.'s own published annual fire counts**: this
    project's extraction runs consistently $0.5$–$2.4\%$ higher across all 20 overlapping years
    (2001–2020) — a small, explainable, non-random offset that functions as external validation
