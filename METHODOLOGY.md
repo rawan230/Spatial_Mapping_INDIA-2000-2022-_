@@ -393,8 +393,11 @@ A forest-masked re-derivation (`Annual_BurnedArea_ForestVsAll.csv`,
 gap this caused: forest-masked burned area is 9,392-51,455 km²/year (2001-2020) vs.
 Biswas et al.'s own ~2,100-17,200 km²/year, correlation improves to r=0.9044, and the
 min/max years now match exactly. A residual ~4x gap remains, disclosed rather than
-forced to close. See `Step1_FirePointExtraction_Audit_and_Documentation.md` for the
-full derivation.
+forced to close. The forest-masked series also correlates more tightly against this
+project's own forest-fire-point counts than the all-land-cover series did (Pearson
+r=0.9345 vs. 0.9149, Spearman rho=0.7846, n=23) -- the expected direction, since both
+measure the same forest-fire population. See
+`Step1_FirePointExtraction_Audit_and_Documentation.md` for the full derivation.
 
 ---
 

@@ -205,7 +205,12 @@ Biswas et al.'s own published annual fire counts:
   $r=0.9044$, and — unlike the all-land-cover series — its minimum (2002) and maximum
   (2009) years now match Biswas et al.'s exactly. A residual $\approx$4$\times$ gap
   remains, disclosed rather than forced to close (plausibly a stricter forest-class
-  definition or extra QA filtering in Biswas et al.'s own unpublished processing). Use
+  definition or extra QA filtering in Biswas et al.'s own unpublished processing). The
+  forest-masked series also correlates *more* tightly against this project's own
+  forest-fire-point counts than the all-land-cover series did — Pearson
+  $r=0.9345$ (vs. $0.9149$), Spearman $\rho=0.7846$, $n=23$ — the expected direction,
+  since both measure the same forest-fire population while all-land-cover burned area
+  also picks up fire activity (e.g. cropland burning) with no fire-point analogue. Use
   $r=0.915$ (all-land-cover) only as the internal fire-point-archive credibility check it
   was designed for; use the forest-masked series for any direct magnitude comparison
   against Biswas et al. Full detail: `Step1_FirePointExtraction_Audit_and_Documentation.md`,

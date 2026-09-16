@@ -70,7 +70,10 @@ interpretable covariate set, not a maximal feature table — not a data gap.
    agree exactly on the minimum year (2002) and maximum year (2009). A residual **~4×
    magnitude gap remains and is disclosed, not hidden** — plausibly a stricter
    forest-class definition or extra QA filtering in Biswas et al.'s own unpublished
-   processing.
+   processing. The forest-masked series also correlates *more* tightly against this
+   project's own forest-fire-point counts than the all-land-cover series did —
+   **Pearson r = 0.9345** (vs. 0.9149), **Spearman ρ = 0.7846**, n = 23 — the expected
+   direction, since both measure the same forest-fire population.
 
 2. **NDVI features.** 9 GPU-vectorized features: QA-filtered mean, climatology, anomaly,
    trend/seasonal/residual decomposition, Mann-Kendall τ, Cumulative Vegetation Stress Index
