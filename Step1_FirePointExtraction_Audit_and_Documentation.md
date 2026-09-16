@@ -197,6 +197,37 @@ disclosed implementation lesson, not a silent optimization.
    Q1 submission: a reviewer or co-author cannot currently re-run this specific analysis
    from the tracked codebase, only inspect its outputs.
 
+   **2026-09-16 addition — a real absolute-magnitude mismatch vs. Biswas et al.'s own
+   burned-area chart, worth resolving before this comparison is cited in the paper.**
+   Biswas et al.'s Fig. 7d (their own MCD64A1.061-derived annual burned-area trend, not
+   given as an exact table in their text — read directly from the bar chart's y-axis)
+   ranges from **≈2,000 km²/year (2002, their visual minimum) to ≈17,200 km²/year (2009,
+   their visual maximum)** across 2001–2020. This project's own `Annual_BurnedArea_vs_
+   FireCount.csv`, same product/years, ranges from **24,011 km²/year (2001) to
+   102,978 km²/year (2009) — roughly 6–10× larger at every point.** The year-to-year
+   *shape* strongly corroborates real agreement despite the scale gap: both series peak
+   in the same year (2009) and both bottom out in the same 2001–2002 window (this
+   project's minimum is 2001, Biswas et al.'s is 2002 — one year off, plausibly just
+   chart-reading imprecision on a value that small). The most likely explanation is a
+   **land-cover mask mismatch, not a computation error**: this repo's own documented
+   burned-pixel mask (`(band > 0) & (band <= 366)`, README "Supplementary validation"
+   section) is applied across **all of India, every land-cover type** — cropland,
+   grassland, etc. included, not just forest — whereas Biswas et al.'s entire paper is
+   scoped to *forest* fires specifically, so their Fig. 7d almost certainly reports
+   forest-masked burned area only. India's forest cover is ~10% of its land area (this
+   repo's own README, "Forest cover held steady at ~9.9–10.4%"), consistent with a
+   6–10× reduction if forest burns somewhat more (per unit area) than the national
+   average. **This cannot be confirmed from code**, because of the same reproducibility
+   gap noted above (item 3's original paragraph) — the script that produced this
+   project's burned-area CSV isn't in the repo to check whether it applied a forest
+   mask. **Priority: medium-high before citing absolute burned-area magnitudes
+   against Biswas et al. in the paper** — either (a) explicitly caveat that the r=0.915
+   correlation validates *trend agreement*, not *magnitude* agreement, since the two
+   series measure different land-cover populations, or (b) re-derive a forest-masked
+   version of this project's burned-area series from the raw MCD64A1.061 NetCDFs (using
+   Step 1's own forest mask, for a genuine apples-to-apples check) if the magnitude
+   comparison needs to be load-bearing for the paper.
+
 4. **No diagnostic plot for confidence-level distribution** — despite the field being
    loaded and retained, there is no histogram/plot showing the confidence distribution of
    retained points (which would visually justify, or motivate, the deferred filtering in
