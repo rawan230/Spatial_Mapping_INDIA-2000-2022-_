@@ -89,8 +89,8 @@ changed and why," each row backed by the cited step's own, now-corrected README:
 | 2. NDVI | One raw monthly MOD13C2 v006 value at 0.05° (their single most important predictor, 28.4% contribution) | 9-feature decomposition (climatology/anomaly/trend/residual/Mann-Kendall/CVSI with a fire-data-driven optimal lag/LISA/empirically-fit breakpoint) at 1km, ~30× finer resolution; CVSI, LISA, and the fitted breakpoint have no counterpart in their methodology at all | [`NDVI_DATA_INDIA_/README.md`](NDVI_DATA_INDIA_/README.md) |
 | 3. LST | Static monthly MOD11C3 day/night means at 0.05° (19.7% combined contribution) | MOD11A2 8-day composites, an explicit diurnal temperature range (DTR) feature they don't compute, full climatology/anomaly/FDR-corrected Mann-Kendall trend testing at 1km | [`LST_analysis/README.md`](LST_analysis/README.md) |
 | 4. FLDAS climatic + land cover | 5 static monthly-mean climatic variables at 0.25° (33.9% combined contribution) + no explicit land-cover feature table | Same 5 FLDAS variables reprojected to 1km with FDR-corrected trend/significance testing; a full 22-class ESA-CCI/C3S land-cover reclassification joinable on (year, month), a granularity absent from their Table 2 | [`FLDAS Noah Land Surface Model.../README.md`](<FLDAS Noah Land Surface Model L4 Global Monthly 0.1 x 0.1 degree (MERRA-2 and CHIRPS) (FLDAS_NOAH01_C_GL_M)/README.md>) |
-| 5a. Terrain | Slope/elevation/aspect rasterized directly at 0.25° from an unspecified DEM/algorithm (topographic group 9.7% combined contribution; slope alone their **2nd-highest** contribution variable at 16.7%) | Horn's (1981) gradient method on a native 90m SRTMGL3 DEM before resampling; an independent empirical cross-check (fires at +115% mean slope vs. national baseline) corroborating their own slope-contribution finding via an entirely different method | [`Terrain_Elevation_Slope_Aspect_Analysis/README.md`](../Terrain_Elevation_Slope_Aspect_Analysis/README.md) |
-| 5b. Accessibility | Distance to roads/rail/waterways from OSM, unspecified algorithm, at 0.25° (human-activity group 10.8% combined contribution — larger than the topographic group) | Full GPU Euclidean distance transform over Geofabrik OSM 2022 vector data at native ~1km in a proper equidistant-conic projection (avoiding the >19% latitude-dependent error a flat degree-to-km conversion introduces) | [`Distance_Roads_Railways_Waterways_Analysis/README.md`](../Distance_Roads_Railways_Waterways_Analysis/README.md) |
+| 5a. Terrain | Slope/elevation/aspect rasterized directly at 0.25° from an unspecified DEM/algorithm (topographic group 9.7% combined importance / **22.5% combined contribution**; slope alone their **2nd-highest** contribution variable overall at 16.7%) | Horn's (1981) gradient method on a native 90m SRTMGL3 DEM before resampling; an independent empirical cross-check (fires at +115% mean slope vs. national baseline) corroborating their own slope-contribution finding via an entirely different method | [`Terrain_Elevation_Slope_Aspect_Analysis/README.md`](../Terrain_Elevation_Slope_Aspect_Analysis/README.md) |
+| 5b. Accessibility | Distance to roads/rail/waterways from OSM, unspecified algorithm, at 0.25° (human-activity group 10.8% combined importance / **9.2% combined contribution** — by contribution, less than half the topographic group's 22.5%, the reverse of an earlier draft's importance-vs-contribution mix-up, corrected 2026-09-23) | Full GPU Euclidean distance transform over Geofabrik OSM 2022 vector data at native ~1km in a proper equidistant-conic projection (avoiding the >19% latitude-dependent error a flat degree-to-km conversion introduces) | [`Distance_Roads_Railways_Waterways_Analysis/README.md`](../Distance_Roads_Railways_Waterways_Analysis/README.md) |
 | 6. Integration | Implicit — one flat 0.25° feature table for MaxEnt | Explicit grid/temporal alignment of 7 heterogeneous sources onto one 1km, 4,161,009-pixel, 57-feature table, with a disclosed and corrected forest-fraction leakage fix (baseline-only feature retained, recent/current years dropped) that Biswas et al.'s own static land-cover treatment has no equivalent safeguard against | [`Integrated_Analysis/README.md`](../Integrated_Analysis/README.md) |
 | 7. Susceptibility model | MaxEnt only, one random train/test split, no spatial CV | A real trained MaxEnt replication **and** a hyperparameter-tuned Random Forest, evaluated with random-split + 5-fold CV + 2°×2° spatial-block CV (Roberts et al. 2017) — RF 0.9704 AUC beats their reported MaxEnt performance outright, and this study's own MaxEnt (0.9598) is directly comparable since it is a faithful replication of their method, not a secondhand citation | [`Integrated_Analysis/README.md`](../Integrated_Analysis/README.md) |
 | 8. CDR-PINN | No mechanistic/physical model of any kind — MaxEnt is purely correlational | A convection-diffusion-reaction PDE (diffusion↔biophysical/climatic, advection↔topographic, reaction↔human-activity, mapping onto their own 4 predictor groups) solved by a physics-informed Fourier neural operator, with proven global well-posedness, all 3 of their own variable-understanding analyses reproduced (permutation/response-curve/Jackknife), and a genuinely new temporal-generalization axis (leave-years-out) they have no equivalent of | [`Physics_Informed_FireRisk_Model/README.md`](../Physics_Informed_FireRisk_Model/README.md), full argument in [`CDR_PINN_Novelty_Comparison_Advantages.md`](CDR_PINN_Novelty_Comparison_Advantages.md) |
@@ -216,6 +216,29 @@ future sessions, per this pass's "docs-first, flag rather than fix" scope.
    artifact (Step 5a, a likely SRTM radar-return artifact over a lake/reservoir)
    and the Euclidean-vs-cost-distance simplification (Step 5b) are both fine to
    state as one-sentence limitations rather than fix.
+7. **[Documentation only, needs the user's own verification]** Step 5b's README
+   cites an "NHESS 2025 study on human-caused ignition likelihood across Europe"
+   as informal support for the Euclidean-distance limitation note. This was
+   flagged by the auditing agent as an unverified reference — no confirmed
+   author/DOI was available — and was deliberately left uncited rather than
+   fabricated. Either supply the exact citation or remove the informal mention
+   before submission.
+8. **[Documentation only, needs remeasurement not guessing]** `Integrated_
+   Analysis/README.md`'s Step 7 wall-time figure (~137 min / 8,241.2 sec) is
+   attributed to the 55-feature leak-fixed run; Step 7 has since been retrained
+   twice more (57-feature specific-humidity addition, MaxEnt tuning). The added
+   column is unlikely to move this much, but it is not a freshly-measured number
+   for the current run — remeasure on the next actual notebook execution rather
+   than editing the figure without a real timing.
+9. **[Fixed 2026-09-23, noted here for traceability]** Both Step 5a and 5b
+   READMEs (and this document's own table above) mislabeled a combined
+   *importance* sum as a combined *contribution* sum for the topographic and
+   human-activity predictor groups, which also produced a reversed comparative
+   claim ("human-activity contributes more than topographic" — actually the
+   opposite once contribution is computed correctly: topographic 22.5% vs.
+   human-activity 9.2%). Corrected in both repos and here; flagged as an example
+   of the kind of cross-file numeric error this audit process is designed to
+   catch, not just a one-off.
 
 ---
 
