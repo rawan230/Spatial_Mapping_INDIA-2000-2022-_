@@ -295,10 +295,16 @@ Two registered Jupyter kernels are used across the project — check a notebook'
 | `wildfire_env` | 3.10.20 | `C:\Users\Admin\anaconda3\envs\wildfire_env\python.exe` | Steps 1, 2 |
 | `firerisk-anaconda3` | 3.12.7 | `C:\Users\Admin\anaconda3\python.exe` (base anaconda3) | Steps 4, 5, 6, 7, 8 |
 
-Step 3 (`LST_analysis/`) has no kernelspec recorded in its notebook metadata and no
-`requirements.txt` — its actual run environment is undocumented; there's an unrelated `uv`
-(Python 3.14) `.venv/` in that folder that doesn't match the notebook's recorded Python
-3.12.7, so don't assume it's the right one without checking first.
+Step 3 (`LST_analysis/`) — **resolved by 2026-09-14 (this CLAUDE.md section itself
+had gone stale and is corrected here on 2026-09-23)**: the notebook's kernelspec
+was previously blank/
+undocumented, requiring empirical investigation; both candidate kernels were
+actually tested reading real GeoTIFFs, and `wildfire_env` (Python 3.10.20) was
+confirmed and pinned explicitly — see `.claude/skills/lst-analysis/SKILL.md` for
+the verification detail. `requirements.txt` now exists and includes `statsmodels`
+(needed for the FDR correction). The unrelated `uv` (Python 3.14) `.venv/` folder
+in that directory is still not the right environment — ignore it; use
+`wildfire_env` as for Steps 1-2.
 
 ## Common commands
 

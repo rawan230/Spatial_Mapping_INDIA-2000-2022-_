@@ -1427,8 +1427,11 @@ contribution rather than buried as limitations:
   Step 8's different pointwise-PINN formulation. The literature's own prediction (Read et al.,
   2019; Karniadakis et al., 2021) is that physics-informed advantages should appear specifically
   under distribution shift rather than in-distribution accuracy — the correct follow-up test
-  (physics-vs-no-physics on Tracks B1/B2/B3) has not yet been run, and this is disclosed
-  explicitly as an open, not a closed, question rather than quietly dropped.
+  (physics-vs-no-physics on Tracks B1/B2/B3) has since been run (2026-08-22,
+  `FULL_EXPERIMENT_LOG.md` §A2c) and closes the question, unfavorably: a
+  noise-level non-effect on B1 ($\Delta=+0.0041$) and a real cost on B2
+  ($\Delta=-0.0390$) and B3 ($\Delta=-0.0123$). This is disclosed explicitly as a
+  closed, negative result rather than left open or quietly dropped.
 - **Six tuning-side interventions were tested against the Track-A accuracy gap to RF/MaxEnt, and
   five of six did not close it.** Metric-fix, scale-up (tested twice), causal time-weighting,
   and curriculum learning all left the gap essentially unchanged or worse; only the

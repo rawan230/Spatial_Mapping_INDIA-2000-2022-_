@@ -128,38 +128,63 @@ MaxEnt — that should be stated plainly, not buried. What it contributes instea
   CDR-PINN (0.7510) decisively — an honest, unfavorable-to-CDR-PINN finding that
   should be stated as plainly as the favorable ones.
 
-## Completeness Audit: Gaps Found
+## Completeness Audit: Gaps Found (original, 2026-08-23) — Status Re-Verified 2026-09-23
 
-Ranked by priority, drawing on the full session's own tracking (`STUDY_STATUS_AND_
-REMAINING_WORK.md`) plus a fresh check against this file's own claims:
+**All seven numbered gaps below were open when this audit was first written
+(2026-08-23). A re-check of the `Physics_Informed_FireRisk_Model` repo's actual git
+history and `CDR_PINN_Data/` contents on 2026-09-23 found six of the seven fully
+closed within the following two weeks — this section previously went stale by
+simply never being revisited after the work landed. Corrected here rather than left
+as a misleading "still open" list.**
 
-1. **[HIGH] No full-country susceptibility probability map generated for CDR-PINN.**
-   RF/MaxEnt have one (`Model_Outputs/Fire_Susceptibility_Map*.png`); CDR-PINN, the
-   study's own "spatial mapping" headline model, does not. This is the single most
-   conspicuous missing deliverable for a paper about *spatial mapping*.
-2. **[HIGH] Tracks B1/B2/B3 have not been re-run against the current standard-
-   protocol checkpoint.** They still reflect the pre-leakage-fix, pre-standard-
-   protocol model. The term-ablation's diffusion-only/+advection rows likewise
-   haven't been re-run under the new protocol — only the full-CDR row has.
-3. **[HIGH] Physics-vs-no-physics comparison has only ever been run on Track A.**
-   Repeatedly flagged throughout this study's own documents as the single most
-   important unresolved experiment — still not done.
-4. **[MEDIUM] No multi-seed results anywhere.** Every CDR-PINN number in this study
-   — including the ones that reversed each other (the LR-schedule split-sensitivity
-   finding) — is single-seed. No bootstrap confidence intervals.
-5. **[MEDIUM] Only one figure exists for CDR-PINN**: the newly-added epoch-vs-
-   loss/AUC diagnostic plot. No ROC/PR curve plot (only the number is reported), no
-   response-curve line plots (only a table), no permutation-importance bar chart.
-6. **[LOW] Zero-shot super-resolution** (a proven FNO property, resolution-
-   independence) has never actually been exercised on a trained checkpoint —
-   architecturally true, operationally untested.
-7. **[LOW] Instance-wise fine-tuning and self-adaptive per-point loss weighting**
-   (both literature-prescribed, qualitatively different from the tuning already
-   tested) — not yet attempted.
-8. **What's already strong, stated plainly rather than underselling it**: the
-   term-ablation study, all 3 Biswas variable-understanding analyses, the 7-way
-   diagnostic sweep against the RF/MaxEnt accuracy gap, and the genuine standard
-   train/val/test protocol (with a real, honest loss/AUC-divergence finding) are all
-   real, rigorous, and — as of this session — properly validated rather than ad-hoc.
-   This step's methodological rigor is not the weak point; its remaining
-   *visualization* and *B1–B3 re-verification* debt is.
+1. ~~**[HIGH] No full-country susceptibility probability map generated for
+   CDR-PINN.**~~ **CLOSED.** `CDR_PINN_Data/cdr_pinn_susceptibility_map.png` exists
+   and is referenced from the current README.
+2. ~~**[HIGH] Tracks B1/B2/B3 have not been re-run against the current standard-
+   protocol checkpoint.**~~ **CLOSED** (commit `b569ed3`, "Add genuine
+   validation-set-driven early stopping to B1/B2/B3 and Jackknife", 2026-08-23) —
+   each fold/track now carves validation out of its own train portion, tracks best
+   validation AUC, early-stops with patience=4. Further extended (commit `687e097`)
+   with a train-vs-validation AUC diagnostic across all four tracks plus Jackknife,
+   which surfaced a genuinely new finding not anticipated by this original audit:
+   B1/B2's weak test performance is an out-of-distribution transfer failure, not
+   classical overfitting (train/val AUC stay close together and high throughout
+   training; the entire collapse happens strictly at the validation→test boundary).
+3. ~~**[HIGH] Physics-vs-no-physics comparison has only ever been run on Track
+   A.**~~ **CLOSED** (commit `e74871f`, "Add physics-vs-no-physics (B1/B2/B3) and
+   multi-seed Track A results", 2026-08-22) — and closed *unfavorably* to the
+   physics term: B1 Δ=+0.0041 (noise-level, no real benefit), B2 Δ=−0.0390 (real
+   cost), B3 Δ=−0.0123 (real cost). This result had itself gone stale in several
+   paper-facing docs (`FULL_EXPERIMENT_LOG.md`, `CDR_PINN_Novelty_Comparison_
+   Advantages.md`, `CDR_PINN_Methodology_Section.md`, `CDR_PINN_Full_Paper_Draft.md`,
+   `Complete_Methodology_Section.md`) which continued to describe it as "not yet
+   run" for a full month after it actually ran — corrected 2026-09-23, see those
+   files' own change history.
+4. **[MEDIUM] No multi-seed results anywhere — PARTIALLY CLOSED.** Track A now has
+   a 3-seed check (42/43/44: AUC=0.9391±0.0017, confirming the headline number is
+   seed-stable). B1/B2/B3 and the term-ablation study remain single-seed — still a
+   real, disclosed limitation, not fully resolved.
+5. ~~**[MEDIUM] Only one figure exists for CDR-PINN.**~~ **CLOSED** (commit
+   `11710b2`, "Generate the 4 missing CDR-PINN figures") — ROC/PR curves, response
+   curves, permutation importance, and the architecture diagram all now exist in
+   `CDR_PINN_Data/`, in addition to the susceptibility map (item 1) and the
+   train/val AUC diagnostics (item 2).
+6. **[LOW] Zero-shot super-resolution — still open, not attempted.** Remains
+   architecturally true (an FNO backbone property) but operationally untested on a
+   trained CDR-PINN checkpoint.
+7. **[LOW] Instance-wise fine-tuning and self-adaptive per-point loss weighting —
+   still open, not attempted.** Both remain literature-prescribed, untried
+   directions for closing the spatial-generalization gap (§5a of the Novelty
+   Comparison document).
+8. **New work since this audit was written, not in the original gap list**: a
+   22-year-vs-20-year training-data-volume ablation (`FULL_EXPERIMENT_LOG.md` §F,
+   2026-09-02) found no measurable CDR-PINN accuracy advantage from the extra 2
+   years at this training scale/seed, though the 22-year record does capture +485
+   (+5.59%) more distinct fire-affected pixels — an honest, disclosed null result on
+   accuracy alongside a real, separate coverage benefit.
+
+**Remaining genuinely open items, current as of 2026-09-23**: multi-seed coverage
+for B1/B2/B3 and the term-ablation study (item 4); zero-shot super-resolution
+(item 6); instance-wise fine-tuning / self-adaptive loss weighting (item 7). Every
+other item this audit originally flagged is closed and verified against the actual
+repo contents, not just a commit message.

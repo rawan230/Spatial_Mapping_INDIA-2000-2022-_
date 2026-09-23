@@ -57,6 +57,37 @@ These figures supersede the A2 table's B1/B2/B3 row for every current-state
 reference in this project's docs; A2's original numbers remain in place above only
 as the historical, pre-fix record.
 
+### A2c. Physics-vs-no-physics comparison, extended to B1/B2/B3 (`run_validation_tracks.py`, 2026-08-22)
+
+Closes the gap this log's own Section E previously (incorrectly) described as still
+open: the physics-vs-no-physics test was, in fact, already run on all three harder
+generalization tracks the same week B1/B2/B3 themselves were finalized — this log
+simply failed to record it at the time. Correcting that omission here rather than
+leaving Section E's stale claim standing.
+
+| Track | Physics AUC | No-physics AUC | Δ (physics − no-physics) | Read |
+|---|---:|---:|---:|---|
+| B1 — spatial block CV | 0.7595 | 0.7555 | +0.0041 | Noise-level, no real benefit |
+| B2 — leave-one-region-out | 0.5978 | 0.6368 | −0.0390 | Real cost from the physics constraint |
+| B3 — leave-years-out | 0.8935 | 0.9059 | −0.0123 | Real cost from the physics constraint |
+| A — multi-seed (seeds 42/43/44) | 0.9391 ± 0.0017 | — | — | Confirms Track A's number is seed-stable, not a lucky draw |
+
+**This closes the literature-motivated hypothesis test, and closes it unfavorably.**
+The prediction (Read et al. 2019; Karniadakis et al. 2021) that physics-informed
+advantages should appear specifically under distribution shift, not in-distribution
+accuracy, does **not** hold for this model on any of the three distribution-shift
+tracks tested: the physics constraint gives a noise-level, statistically
+indistinguishable result on B1, and a real, measurable *cost* on B2 and B3. Combined
+with Track A's own physics-vs-no-physics null result (§A above), the honest
+conclusion across all four tracks is that this specific CDR-PINN physics
+formulation provides no demonstrated generalization advantage anywhere in this
+study, on any axis tested. This is a genuine, disclosed negative result — reported
+here exactly as measured, not softened, and this is the version that must propagate
+into every paper-facing doc that still cites the "not yet been run" framing
+(`CDR_PINN_Novelty_Comparison_Advantages.md` §4a/§5, `CDR_PINN_Methodology_Section.md`,
+`CDR_PINN_Full_Paper_Draft.md`, `Complete_Methodology_Section.md` — corrected
+2026-09-23).
+
 ### A3. Reviewer-defense diagnostics — closing the Track-A accuracy gap to RF/MaxEnt
 
 | # | Intervention | Split | Val set? | Config | ROC-AUC | Verdict | Date |
@@ -222,9 +253,11 @@ complete: `run_validation_tracks.py` (B1/B2/B3, results in A2b) and
 `jackknife_test.py` (results in A6b) both now carve validation pixels/years out of
 each fold's/retrain's own train portion only, track best validation AUC, and
 early-stop with patience=4, closing the validation-monitoring gap flagged in
-section D. The physics-vs-no-physics comparison on the harder B1/B2/B3 splits
-(as opposed to just Track A) remains not yet performed — that is a separate,
-still-open item.
+section D. **Correction, 2026-09-23**: this section previously stated the
+physics-vs-no-physics comparison on the harder B1/B2/B3 splits "remains not yet
+performed" — that was wrong; it was run the same week (2026-08-22, before this
+section was even first compiled) and is now recorded in full at §A2c above. No
+open item remains here.
 
 ---
 
