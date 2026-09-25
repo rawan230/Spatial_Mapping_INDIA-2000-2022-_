@@ -40,3 +40,9 @@ __pycache__/
 # results/ (2026-09-25 audit) is excluded by */ above; only a curated deliverable subset is
 # force-added (git add -f): results/*.md, audit/, biswas_reference/, final/, code/, historical/,
 # repo_audit_docs/. Large arrays, predictions and checkpoints stay local.
+
+# Exception: the TGRS submission package (LaTeX source, figures and its own compiled PDF).
+# The manuscript PDF is the authors' own work, so it is exempted from the *.pdf rule above.
+!Manuscript_TGRS/
+!Manuscript_TGRS/**
+!Manuscript_TGRS/main.pdf
