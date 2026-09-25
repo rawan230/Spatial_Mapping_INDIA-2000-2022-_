@@ -48,6 +48,17 @@ Essentials:
   not satisfy its PDE.
 - **Biswas-style reimplementation** (0.25°, 2020 presences, MaxEnt): test AUC 0.893 ± 0.009 vs their
   0.879. The pixel-level AUCs in this project are not comparable with Biswas's AUC.
+- **The step repositories now run v2 (updated 2026-09-25).** Every step's notebook or build script
+  was changed to the audited methodology, and each README carries its current results.
+  - **Re-executed end-to-end and matched to the audit:** Steps 1, 2, 3, 4, 5a, 5b and 6.
+    - Step 6 writes the v2 parquet: 4,160,768 × 60, 55 features.
+    - `V2_vs_audit_reference_check.csv` confirms it matches `results/recalculated/FEATURE_TABLE_v2.parquet`.
+  - **Step 7** (`step7_models.py`) and **Step 8** (`cdr_pinn/run_unified_protocol.py`) contain the
+    full model code. Their notebooks and analyses load the audit's verified result files instead of
+    refitting: about 16 CPU-hours and 4.5 GPU-hours to refit. The Step 7 notebook's
+    `RUN_MODELS = False` default does this.
+  - **Superseded v1 outputs** are kept in each step's `_superseded_v1/` folder, or in
+    `_Archive_Unwanted_2026-09-25/historical_v1_outputs/`.
 
 For substantial hands-on work in one step's folder (editing a notebook, debugging its
 environment, extending its features), dispatch that work to an isolated subagent context
@@ -400,7 +411,7 @@ run for minutes even on GPU, longer on CPU fallback.
 Regenerate a build-script-based notebook after editing its source:
 ```bash
 python build_notebook.py        # Step 1 -> FOREST_FIRE_POINTS_EXTRACTION(INDIA).ipynb
-python build_ndvi_notebook.py   # Step 2 -> NDVI_Novel_Analysis_FINAL_15.ipynb
+python build_ndvi_notebook.py   # Step 2 -> NDVI_ANALYSIS_WITH_FFP.ipynb
 ```
 
 ## Windows/PowerShell pitfall to watch for
