@@ -1,5 +1,17 @@
 # Step 2 — NDVI Feature Engineering: Audit & Documentation
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/Step2_NDVI_Audit_and_Documentation.md`. Statements in this document superseded by the audit:
+>
+> - **Moran's I 0.8322**: reproduced, but 67% of the cells were row-mean-filled non-India cells. India-only (8×8 block means): **I = 0.9456**.
+> - **Mann–Kendall significance counts**: reproduce, but the tests are invalid (MK on a smoothed or seasonal series). Seasonal Kendall + FDR gives NDVI 3,552,278 greening / 72,305 browning; LST day 2,435,163 cooling; night 2,080,747 warming; DTR 3,273,301 narrowing.
+> - **Anomaly-mean features** (climate, LST, NDVI) are degenerate: with a 2001–2020 baseline they equal the residue of the 26 out-of-baseline months. v2 replaces them with climatological levels.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Folder:** `NDVI_DATA_INDIA_/` · **Generator:** `build_ndvi_notebook.py` → `NDVI_Novel_Analysis_FINAL_15.ipynb`
 **Executed notebook (real outputs):** `NDVI_ANALYSIS_WITH_FFP.ipynb` (kernel `wildfire_env`, Python 3.10.20)
 **Outputs:** `NDVI_Fire_Susceptibility_Outputs/`

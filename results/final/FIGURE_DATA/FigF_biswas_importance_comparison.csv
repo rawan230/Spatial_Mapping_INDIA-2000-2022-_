@@ -1,0 +1,16 @@
+variable,biswas_reported_pct,reimplementation_pct
+NDVI,22.3,18.98253904709561
+Air temperature,13.1,13.157955782132374
+Specific humidity,13.0,3.0969585041755674
+LST night,10.1,14.280157120540249
+LST day,9.6,8.135475123695924
+Distance to roads,5.7,1.8625680564167462
+Slope,5.6,5.805840488297004
+Distance to railways,4.6,2.447280070166576
+Soil moisture,3.8,7.475641150257158
+Precipitation,3.6,2.664346186627676
+Near-surface wind speed,2.4,2.7074417646843703
+Elevation,2.4,10.71539484996315
+Net longwave radiation flux,1.8,5.418205142181111
+Aspect,1.7,0.3986362317370004
+Distance to waterways,0.5,2.8515604820294813

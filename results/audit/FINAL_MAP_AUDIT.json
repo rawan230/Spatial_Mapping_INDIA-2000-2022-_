@@ -1,0 +1,56 @@
+{
+ "Integrated_Analysis/Model_Outputs/Fire_Susceptibility_Probability.tif": {
+  "crs": "EPSG:4326",
+  "shape": [
+   3641,
+   3504
+  ],
+  "res": [
+   0.008333333332583237,
+   -0.008333333332583237
+  ],
+  "bounds": [
+   68.19999999386121,
+   6.7499999993924185,
+   97.39999999123287,
+   37.091666663327985
+  ],
+  "nodata": NaN,
+  "dtype": "float32",
+  "tags": {
+   "AREA_OR_POINT": "Area"
+  },
+  "n_valid": 4161009,
+  "min": 0.0,
+  "max": 0.9951547384262085,
+  "mean": 0.13549782288561238,
+  "pct_gt_0_5": 12.57437799341458
+ },
+ "Integrated_Analysis/Model_Outputs/MaxEnt_Susceptibility_Probability.tif": {
+  "crs": "EPSG:4326",
+  "shape": [
+   3641,
+   3504
+  ],
+  "res": [
+   0.008333333332583237,
+   -0.008333333332583237
+  ],
+  "bounds": [
+   68.19999999386121,
+   6.7499999993924185,
+   97.39999999123287,
+   37.091666663327985
+  ],
+  "nodata": NaN,
+  "dtype": "float32",
+  "tags": {
+   "AREA_OR_POINT": "Area"
+  },
+  "n_valid": 4161009,
+  "min": 3.785416424761934e-12,
+  "max": 1.0,
+  "mean": 0.09241682177436697,
+  "pct_gt_0_5": 7.601233258567813
+ }
+}

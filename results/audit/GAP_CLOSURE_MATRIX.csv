@@ -1,0 +1,39 @@
+gap_id,source,gap,audit_action,evidence,status,remaining_action
+A1,STUDY_METHODOLOGY_AND_GAPS II.A1,'Specific humidity' should read 'relative humidity (derived)',Verified per-pixel feature list in parquet,"fldas_qair_anomaly and fldas_qair_mk_tau_monthly are per-pixel (3.76M distinct values); RH is an additional predictor",CLOSED - GAP WAS INCORRECT,Do NOT apply the proposed fix; state both humidity variables
+A2,II.A2,MaxEnt 150k subsample undisclosed,Sample-size sensitivity 50k-500k (3 seeds <=150k),"AUC 0.9635 -> 0.9670 -> 0.9685; fit time ~n^1.6 (7,303 s at 500k); RF-MaxEnt gap persists",CLOSED (quantified),Disclose subsample + sensitivity
+A3,II.A3,DTR trend not in stack,Seasonal-Kendall DTR trend computed and included in v2,v2_lst_dtr_sk_tau,CLOSED (v2),-
+C1,II.C1,No FIRMS confidence filtering,Label sensitivity,conf>=30: Delta AUC -0.0003 (all) / -0.0005 (forest),CLOSED (null result),Disclose as tested
+C2,II.C2,type field not filtered,Label sensitivity,type==0: Delta AUC 0.0000 / +0.0002,CLOSED (null result),Disclose
+C3,II.C3,No state-vs-country boundary sensitivity,Point counts under state / country / GADM polygons,see R1_report.json boundary_sensitivity_*,CLOSED (quantified),-
+C4,II.C4,Burned-area validation script not preserved,git ls-files,"compute_forest_masked_burned_area.py, generate_burned_area_validation_plot.py are tracked (commit 5b2c316); correlations reproduce from saved series",CLOSED - GAP WAS OUT OF DATE,MCD64A1 raw re-extraction not repeated
+C5,II.C5,No NDVI QA / climatology sensitivity,Recalc R4,Good-only vs Good+Marginal F1 r=0.989 (39.7% vs 8.2% pixel-months lost); 2001-2022 climatology computed,CLOSED,-
+C6,II.C6,No controlled NDVI ablation,Paired DeLong ablations,"trend group +0.0013/+0.0056; label-derived NDVI features 0.0000; NDVI importance top in Biswas-15 models",PARTIALLY CLOSED,Dedicated NDVI-group ablation not run
+C7,II.C7,No independent LST validation,-,No independent LST product on disk,OPEN (future work),-
+C8,II.C8,No LST climatology / MOD11C3 sensitivity,0.05-deg aggregation test + RF_v2_lst005,98.5-99.4% variance retained; Delta AUC -0.0001 / -0.0002,CLOSED (resolution); product difference remains,Disclose product difference
+C9,II.C9,No climate cross-check; different precipitation source,Documented source differences; Fig 11 correlations,"Precip r with fire density 0.402 (FLDAS) vs Biswas not reported for precip",PARTIALLY CLOSED,Independent reanalysis cross-check still open
+C10,II.C10,Net LW omitted from coincidence check,-,Not re-run,OPEN (low priority),-
+C11,II.C11,Static LULC vs dynamic climate,Documented; v2 uses 2001 LULC,Temporal mismatch is not leakage (leakage from 2020 map measured weak),CLOSED (documented),-
+C12,II.C12,No terrain algorithm / distance validation,Horn vs ZT; geodesic validation,"Horn vs ZT r=0.9998, Delta AUC 0.0000; distance RMSE 0.31/0.65/0.32 km",CLOSED,-
+C13,II.C13,-46.9 m elevation artefact,Located,"Neyveli lignite mines (11.56N, 79.50E): likely real excavation surface",CLOSED - GAP REINTERPRETED,Footnote
+C14,II.C14,Dense grid vs NaN tolerance,NaN audit,"CDR-PINO fills NaN with 0 (0 m elevation for 0.38% cells; 2007-03/04 NDVI months fully NaN->0; 270 cells always-NaN dryness)",CLOSED (quantified),Disclose
+C15,II.C15,Track-A vs B1/B2/B3 checkpoint identity,Code + checkpoint hashes,"Separate models trained with different protocols (Adam+cosine vs AdamW+ReduceLROnPlateau); cdr_pinn_full_cdr.pt byte-identical to standard-protocol checkpoint (ablation checkpoint overwritten)",CLOSED (they are not the same),Report unified single-protocol results
+C16,II.C16,Ablation single-seed,Unified 3-seed 4-config ablation on A/B1/B3 (+B2 2 configs),see ABLATION_RESULTS.csv,CLOSED,-
+E2,II.E2,Zero-shot super-resolution,-,Not evaluated,OPEN (future work),Do not claim
+E3,II.E3,Instance-wise fine-tuning,-,Not implemented,OPEN (future work),Do not claim
+NEW1,Audit,Half-pixel fire-rasterisation shift,Recalc R1,74.9% of points displaced; correcting it raises RF AUC +0.0055 (all) / +0.0114 (forest) on the same split,CLOSED (v2),Update CLAUDE.md rasterisation rule
+NEW2,Audit,2020 land-cover fractions in model (in-window),Recalc R3 + leakage-mechanism test,Forest change 2001-2020 similar at fire/non-fire px; v1 vs v2 AUC equal,CLOSED (v2 uses 2001),-
+NEW3,Audit,Degenerate anomaly-mean climate/LST/NDVI features,Identity proof,26-month residue; replaced by levels,CLOSED (v2),-
+NEW4,Audit,MK on seasonal / autocorrelated series,Seasonal Kendall + Sen + BH-FDR,Air-temperature 'noise' conclusion reversed,CLOSED (v2),Correct manuscript text
+NEW5,Audit,Label-derived features (theta*, CVSI k*),Training-only reselection + ablation,"theta* 0.535->0.537, k* 8->8; Delta AUC 0.0000",CLOSED (negligible),-
+NEW6,Audit,Moran's I computed with 67% synthetic filled cells,India-only recomputation,I = 0.9456 (vs 0.8322),CLOSED,Replace reported I
+NEW7,Audit,Forest-mask dominance of all-India AUC,Forest-only population,"RF v2: 0.975 all vs 0.897 forest; forest fraction alone AUC 0.91",CLOSED (reported both),Make forest population primary
+NEW8,Audit,B3 terminal-label leakage,Leak-free rerun,Effect +0.0006 (negligible),CLOSED,-
+NEW9,Audit,B3 lacks null baselines,Persistence nulls on identical cell-months,Nulls 0.908 / 0.930 exceed CDR-PINO 0.893,CLOSED,Withdraw 'temporal generalisation strong'
+NEW10,Audit,CDR vs RF compared on different populations,Bridge on CDR cells/splits/covariates,RF 0.980 / 0.974 / 0.959 vs CDR 0.939 / 0.719 / 0.570 (A/B1/B2),CLOSED,Report same-cells comparison
+NEW11,Audit,Trained CDR field static; PDE unsatisfied,Term-magnitude audit (5 checkpoints),median |du/dt| <=0.002; residual 74-616x |du/dt|; diffusion <=0.3% of RHS,CLOSED (quantified),Disclose; revise 'spatiotemporal evolving field' claim
+NEW12,Audit,Equation/text mismatches (Fisher-KPP, loss weights, negative sampling, BC, IC),EQUATION_CODE_AUDIT.csv,see file,CLOSED (documented),Correct manuscript text
+NEW13,Audit,RF map not calibrated; CDR map not georeferenced,Final map audit + v2 map with metadata,RF mean score 0.135 vs prevalence 0.065,CLOSED (v2 map labelled relative score),-
+NEW14,Audit,Undocumented cdr_pinn_env; base env torch is CPU-only,Environment audit,DATA_PROVENANCE.md §4,CLOSED (documented),Update CLAUDE.md
+NEW15,Audit,SHAP not computed,-,shap incompatible with installed numba/NumPy 2.5,OPEN,Permutation importance + PDP provided instead
+NEW16,Audit,Calibrated uncertainty,-,Brier/ECE reported; no recalibration or predictive intervals,OPEN,State 'No calibrated uncertainty estimate was established.'
+NEW17,Audit,Resolution independence,-,Not tested,OPEN (future work),Do not claim

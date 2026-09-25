@@ -1,0 +1,48 @@
+{
+ "n_valid_cells": 22542,
+ "static_nan_pct_forest_frac": 0.6166267411942152,
+ "static_nan_pct_slope": 0.3770739064856712,
+ "static_nan_pct_dist_roads": 0.0,
+ "static_nan_pct_elevation": 0.3770739064856712,
+ "static_nan_pct_grad_e_x": 0.0,
+ "dynamic_nan_pct_ndvi_anomaly": 1.6548057660787583,
+ "ndvi_anomaly_worst_month_nan_pct": 100.0,
+ "ndvi_anomaly_months_with_any_nan": 266,
+ "ndvi_anomaly_cells_nan_in_any_month_pct": 100.0,
+ "dynamic_nan_pct_dryness_proxy": 1.1977641735427202,
+ "dryness_proxy_worst_month_nan_pct": 1.1977641735427202,
+ "dryness_proxy_months_with_any_nan": 266,
+ "dryness_proxy_cells_nan_in_any_month_pct": 1.1977641735427202,
+ "dynamic_nan_pct_fire_indicator": 0.0,
+ "fire_indicator_worst_month_nan_pct": 0.0,
+ "fire_indicator_months_with_any_nan": 0,
+ "fire_indicator_cells_nan_in_any_month_pct": 0.0,
+ "dryness_cells_always_nan": 270,
+ "v1_rows_with_any_nan_pct": 1.5873794072543461,
+ "v1_rows_with_any_nan": 66051,
+ "v1_positive_rate_rows_with_nan": 0.03226294741034508,
+ "v1_positive_rate_rows_complete": 0.06543241441249847,
+ "ndvi_anomaly_top_nan_months": [
+  [
+   "2007-03",
+   100.0
+  ],
+  [
+   "2007-04",
+   100.0
+  ],
+  [
+   "2013-07",
+   6.0
+  ],
+  [
+   "2020-01",
+   4.8
+  ],
+  [
+   "2001-07",
+   4.3
+  ]
+ ],
+ "note": "CDR-PINO converts every NaN to 0 (preprocessing.load_tensors: np.nan_to_num(nan=0)): 0 m elevation, 0 deg slope, 0 anomaly, 0 dryness; classical models use median imputation"
+}

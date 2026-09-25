@@ -33,3 +33,10 @@ __pycache__/
 # not current — see old_versions/README.md. No nested .git inside it.
 !old_versions/
 !old_versions/**
+
+# Copyrighted reference paper (Biswas et al. 2025) -- never commit to the public remote
+*.pdf
+
+# results/ (2026-09-25 audit) is excluded by */ above; only a curated deliverable subset is
+# force-added (git add -f): results/*.md, audit/, biswas_reference/, final/, code/, historical/,
+# repo_audit_docs/. Large arrays, predictions and checkpoints stay local.

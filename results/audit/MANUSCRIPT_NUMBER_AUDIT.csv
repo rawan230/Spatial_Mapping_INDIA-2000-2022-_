@@ -1,0 +1,56 @@
+id,claim,historical_value,source_document,code_or_script,recalculated_value,biswas_value,match,cause_if_different,action
+N01,Raw FIRMS archive rows,"2,804,373",STUDY_METHODOLOGY_AND_GAPS.md §1,recalc_01_fire_labels.py,"2,804,373",-,EXACT,-,keep
+N02,After India bbox,"2,801,347",§1,recalc_01,"2,801,347",-,EXACT,-,keep
+N03,After India polygon,"1,599,471",§1,recalc_01,"1,599,471",-,EXACT,-,keep
+N04,After dedup,"1,599,466",§1,recalc_01,"1,599,466",-,EXACT,-,keep
+N05,Forest fire points,"541,545",§1; CLAUDE.md,recalc_01,"541,545 (identical point set)",-,EXACT,-,keep
+N06,Points outside India removed,"1,201,876 (42.9%)",§1,recalc_01,"1,201,876 (42.9%)",-,EXACT,-,keep
+N07,National forest cover 2000-2022,9.86-10.43%,§1,recalc_01 annual_extraction_and_forest_cover.csv,"9.86-10.43% over the DOWNLOAD RECTANGLE; 18.27-19.32% over India only",-,WRONG LABEL,Statistic computed over the rectangular LULC subset incl. neighbouring countries and ocean,Relabel or replace with India-only 18.3-19.3%
+N08,Confidence<30 share,4.29% (23236),§1 / II.C1,recalc_01,"4.29% (23,236)",-,EXACT,-,keep
+N09,type!=0 share,0.21%,§1 / II.C2,recalc_01,"0.21% (1,124: type 2 = 1,122, type 3 = 2)",-,EXACT,-,keep
+N10,Burned area vs fire count (all land cover),"r=0.915, rho=0.835, n=23",§1,"recomputed from saved annual series + recalculated counts","r=0.9149, rho=0.8350, n=23",-,EXACT (from saved series),MCD64A1 not re-extracted from raw in this audit,keep; state source series
+N11,Forest-masked burned area vs fire count,"r=0.9345, rho=0.7846",§1,as above,"r=0.9345, rho=0.7846",-,EXACT (from saved series),-,keep
+N12,Forest-masked burned area vs Biswas Fig 7d,r=0.9044; residual ~4x,§1,BurnedArea_ForestMasked_vs_Biswas_Difference.csv,not recomputed,Fig 7d values DIGITISED from a chart,NOT VERIFIABLE vs Biswas,Biswas values are digitised estimates not reported numbers,Label as digitised
+N13,Annual counts vs Biswas,0.5-2.4% higher,§1,recalc_01,"+0.51% to +2.43%, r=0.99996",derived from published shares,EXACT,-,keep
+N14,Common grid,"3641 x 3504, ~0.01 deg, a=0.01",§0,raw MOD13A3 transform,"3641 x 3504, a = 1/120 deg (0.008333)",-,PARTIAL,Spacing is 1/120 deg not 0.01 deg,Correct text
+N15,In-India valid pixels,"4,161,009 (32.6%)",§0,recalc_04,"4,161,009 NDVI-valid of 4,184,671 India-mask pixels",-,EXACT,-,keep
+N16,Fire-affected pixels,"270,655 (2.12% of grid)",§2 F10,recalc_01/04,"270,655 on full grid with historical rule (270,074 in valid pixels); 268,411 valid with corrected rule",-,EXACT (historical rule),Historical rule shifts 74.9% of points one pixel (E01),Replace with corrected-rule count
+N17,Rasterised fire_count sum in model table,"541,545 implied",Step 6,parquet,"540,513 in valid pixels (1,032 points fall on non-valid pixels; 412 outside India mask)",-,DIFFERENT,Points on NaN/non-India pixels dropped silently,Disclose
+N18,NDVI F1 range,"[-0.1894, 0.9679]",§2,recalc_04,reproduced (F1 max abs diff 0.0),-,EXACT,-,keep
+N19,MK sig browning / greening (NDVI),"147,206 / 3,731,210",§2 F6,recalc_04,"147,203 / 3,731,196 (float precision)",-,EXACT (+/-14 px),MK applied to autocorrelated 2x12-MA series (lag-1 r=0.975): test invalid,"Replace with Seasonal Kendall: 72,305 browning / 3,552,278 greening (BH-FDR q<0.05)"
+N20,CVSI k*, k*=8,§2 F7,recalc_04,k*=8 with historical / corrected / training-only labels,-,EXACT,-,keep
+N21,CVSI max MI,"I=0.01257 nats",§2 F7,recalc_04,"0.01253 (mean of 5 background draws)",-,EXACT (within sampling),Single historical draw vs 5-draw mean,keep
+N22,Global Moran's I (NDVI),"I=0.8322, z=742.1",§2 F8,recalc_04,"I=0.8322, z=742.1 reproduced; BUT 134,711 of 199,728 cells (67%) are non-India cells row-mean filled",-,EXACT (method defective),Filled synthetic cells dominate the statistic,"Replace with India-only 8x8 block-mean I=0.9456 (z=494.2, p=0.001)"
+N23,NDVI-fire breakpoint,theta*=0.535,§2 F9,recalc_04,"0.5348 (hist labels); 0.5239 corrected labels; 0.5370 training-only",-,EXACT,-,keep (feature dropped in v2 as redundant)
+N24,MOD11A2 composites,"1,013",§3,recalc_05,"1,013 complete (2001-06-26 and 2016-02-18 incomplete, silently excluded)",-,EXACT,Two composites missing,Disclose
+N25,LST MK tau national (Day / Night / DTR),"-0.041 / +0.043 / -0.104",§3,recalc_05,"-0.0406 / +0.0428 / -0.1037 (raw-monthly MK, reproduced)",-,EXACT (method invalid),MK on seasonal series,"Replace with Seasonal Kendall tau -0.134 / +0.109 / -0.201"
+N26,LST FDR shrinkage Day,"1,063,120 -> 393,838",§3,recalc_05,"1,063,120 -> 393,838",-,EXACT (method invalid),as N25,"SK: 2,634,845 FDR-significant (2,435,163 cooling)"
+N27,LST FDR shrinkage Night,"234,318 -> 17,935",§3,recalc_05,"234,318 -> 17,935",-,EXACT (method invalid),as N25,"SK: 2,096,575 FDR-significant (2,080,747 warming)"
+N28,LST FDR shrinkage DTR,"2,545,287 -> 2,290,051",§3,recalc_05,"2,545,287 -> 2,290,051",-,EXACT (method invalid),as N25,"SK: 3,317,942 FDR-significant (3,273,301 narrowing)"
+N29,FLDAS crop / India pixels,"335 x 315, 29,056",§4,recalc_02,"335 x 315, 29,056",-,EXACT,-,keep
+N30,Air-temperature trend 636 raw-significant -> 0 after FDR ('multiple-testing noise'),636 -> 0,§4,recalc_02,"636 -> 0 reproduced; Seasonal Kendall: 9,988 of 29,056 px FDR-significant (7,620 cooling)",-,EXACT (conclusion WRONG),MK on seasonal monthly series,Withdraw 'noise' conclusion; report SK result
+N31,Specific humidity 'national scalar only',national scalar,§4 table; II.A1,parquet,Per-pixel features fldas_qair_anomaly and fldas_qair_mk_tau_monthly (3.76M distinct values),13.0% importance,WRONG,Gap document out of date (qair wired in 2026-08-22),Remove II.A1 'fix'
+N32,Precip anomaly at fire pixel-months,-5.6 mm vs +0.7 mm,§4,not recomputed (pixel-month coincidence statistics depend on the shifted rule),-,-,NOT RECOMPUTED,-,Recompute with corrected rasterisation before use
+N33,Land-cover top-5 fractions (2020),"35.00 / 20.94 / 8.02 / 5.34 / 4.72%",§4,recalc_03,2020 fractions reproduced bit-exactly (max diff 0),-,EXACT,2020 map inside the label window,v2 uses 2001
+N34,Elevation range / mean,"-46.9 to 8,169.0 m; mean 737.2",§5a,recalc_06,"-46.87 to 8,068.9 m (1 km, analysis pixels); mean 736.2; native 90 m -70 to 8,550",-,POPULATION-DEPENDENT,Different pixel population / resolution,State population; -46.9 m = Neyveli lignite mines (not an SRTM artefact)
+N35,Slope mean / max,"5.72 / 77.31 deg",§5a,recalc_06,"5.72 (1 km mean) / 69.6 (1 km max); native 90 m max 87.3",-,EXACT (mean) / POPULATION-DEPENDENT (max),-,State resolution
+N36,Fire slope enrichment,"12.3 deg vs 5.7, +115%",§5a,FEATURE_TABLE_v2,"11.9 vs 5.72, +108% (corrected label)",-,DIFFERENT,Half-pixel label shift,Replace
+N37,Distance means roads / railways / waterways,"5.69 / 38.28 / 6.74 km",§5b,R7 / v2 table,"5.60 / 37.44 / 6.68 km (analysis pixels)",-,POPULATION-DEPENDENT,Different pixel population,State population
+N38,Fire-coincidence roads / waterways / railways,"-40.1% / -64.7% / +4.8%",§5b,v2 table,"-41.5% / -63.9% / +1.4% (corrected label)",-,DIFFERENT,Label shift,Replace
+N39,Distance accuracy,not validated,II.C12,recalc_07,"vs exact geodesic (n=3000): bias -0.15 / -0.22 / -0.14 km; RMSE 0.31 / 0.65 / 0.32 km",-,NEW,-,Add
+N40,Feature count,"55 trainable (text) / 57 (after qair)",§6; CLAUDE.md,parquet,"57 (61 columns - lon, lat, fire_count, fire_ever)",-,57 CONFIRMED,Text inconsistent,Use 57 for v1; v2 has 55
+N41,Pre-fix forest_frac_recent/current top-3 Gini (~0.40),~0.40,§6,not recomputed,"Leakage mechanism test: forest change 2001-2020 +0.019 at fire vs +0.018 at non-fire forest px",-,-,Importance reflected forest-mask dominance rather than post-fire reclassification,Reframe
+N42,RF Track A headline,"AUC 0.9704, AP 0.7011",§7,models_classical repro,"0.9704 / 0.7011 (exact)",0.879 (not comparable),EXACT,-,keep as v1; v2: 0.9750 / 0.7200 (all), 0.8971 / 0.7212 (forest)
+N43,MaxEnt Track A,"AUC 0.9598, AP 0.6275",§7,models_classical repro,"0.9598 / 0.6275 (exact)",-,EXACT,-,keep as v1; v2 0.9670 / 0.6626
+N44,RF / MaxEnt spatial-block CV,"0.9498+/-0.0035 / 0.9465+/-0.0054",§7,models_classical B1hist,"RF folds 0.9459 / 0.9527 / 0.9508 (exact)",-,EXACT,"Not the same folds/grid/label/features as CDR B1",Remove 'matching B1 exactly'
+N45,MaxEnt subsample,150k of ~2.7M,II.A2,maxent_n,"150,000 of 2,704,498 (5.5%); 500k gives +0.0015 (all) / +0.006 (forest) AUC at 6.5x the time",-,EXACT,-,Disclose + report sensitivity
+N46,CDR Track A,"test AUC 0.9398 (val 0.9351, AP 0.9223)",§8,repro_historical_cdr.py,"0.9398 / 0.9351 / 0.9223 (bit-exact); unified 3-seed full CDR 0.9388 +/- 0.0016",-,EXACT,-,Report with prevalence 42% and 12 km population
+N47,CDR Track A multi-seed,0.9391+/-0.0017,§8,unified runner,full CDR 0.9388 +/- 0.0016 (seeds 42-44),-,CONSISTENT,-,keep
+N48,CDR B1,0.7510+/-0.0182,§8,repro_historical_cdr.py,"0.7510 +/- 0.0182 (bit-exact); unified protocol 0.7185 (3 seeds)",-,EXACT,Historical validation carved random pixels (in-distribution),Report unified value
+N49,CDR B2,0.6187+/-0.0680,§8,repro,"0.6187 +/- 0.0680 (bit-exact); unified 0.5701 (3 seeds)",-,EXACT,as above,Report unified value
+N50,CDR B3,"0.8960, AP 0.1445, n=856,596, 2.46%",§8,repro,"0.8960 / 0.1445 (bit-exact); leak-free 0.8934 +/- 0.0031; nulls 0.908 / 0.930",not reported by Biswas,EXACT (interpretation wrong),Below covariate-free persistence nulls,Report with nulls
+N51,Term ablation,"0.6017 / 0.9239 / 0.9397",§8,historical JSONs,"Historical values from single-seed fixed-budget runs; full_cdr checkpoint overwritten by standard-protocol checkpoint. Unified: nophys 0.9450, diff 0.9242, diff+adv 0.9394, full 0.9388",-,NOT REPRODUCIBLE (checkpoint overwritten) / SUPERSEDED,Protocol differences; no no-physics arm,Replace with unified 4-arm ablation
+N52,Physics vs no physics (A/B1/B2/B3),"-0.0055 / +0.0040 / -0.0390 / -0.0124",§8,unified,"full - nophys: -0.0062 (A, p<0.02 all seeds) / -0.0050 (B1, CI incl 0) / -0.0443 (B2, CI incl 0) / -0.0110 (B3)",-,CONSISTENT DIRECTION,-,Replace with 3-seed paired values
+N53,Physics training cost,2.50x (146.7 s -> 367.4 s),§8,unified,"Track A mean fit time: nophys 95 s, full 222 s (2.3x); B3 143 s vs 343 s (2.4x)",-,CONSISTENT,-,keep
+N54,Jackknife elevation-only AUC,0.9399,§8,historical JSON,not re-run,-,NOT RE-RUN,-,Frame as CDR-covariate-specific (terrain redundant in full predictor set)
+N55,Peak GPU memory,3.25 GB,§8,unified,3.2 GB (repro),-,EXACT,-,keep

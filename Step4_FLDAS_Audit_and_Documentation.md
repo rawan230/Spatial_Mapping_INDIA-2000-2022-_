@@ -1,5 +1,20 @@
 # Step 4 — FLDAS Climatic Variables + Land Cover: Audit and Documentation
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/Step4_FLDAS_Audit_and_Documentation.md`. Statements in this document superseded by the audit:
+>
+> - **'Specific humidity is only a national scalar'**: incorrect. Specific humidity is a per-pixel predictor (v1 and v2); derived RH is an additional predictor.
+> - **'Air-temperature trend is multiple-testing noise'**: an artefact of MK on seasonal data. Seasonal Kendall gives 9,988 of 29,056 pixels FDR-significant.
+> - **Fire rasterisation rule `round((lat−f)/e)`**: displaces 74.9% of points by one pixel (it rounds against the edge). The correct rule is `floor`. Correcting it raises RF AUC by +0.006 (all) / +0.011 (forest).
+> - **Grid spacing** is 1/120° (≈0.93 km), not 0.01°.
+> - **Anomaly-mean features** (climate, LST, NDVI) are degenerate: with a 2001–2020 baseline they equal the residue of the 26 out-of-baseline months. v2 replaces them with climatological levels.
+> - **22 land-cover fractions** come from the 2020 map, inside the label window. v2 uses the 2001 map; the measured leakage effect is small.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Folder:** `FLDAS Noah Land Surface Model L4 Global Monthly 0.1 x 0.1 degree (MERRA-2 and CHIRPS) (FLDAS_NOAH01_C_GL_M)/`
 **Notebook:** `Land Surface Model Variables Analysis.ipynb` (hand-authored, 26 cells, no generator script)
 **Outputs:** `FLDAS_Outputs/`

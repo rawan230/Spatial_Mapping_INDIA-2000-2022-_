@@ -1,5 +1,17 @@
 # Why the 22 ESA-CCI Land-Cover Classes Are Model Features, Not Just a Mask
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/Step7_LandCover_Feature_Selection_Rationale.md`. Statements in this document superseded by the audit:
+>
+> - **22 land-cover fractions** come from the 2020 map, inside the label window. v2 uses the 2001 map; the measured leakage effect is small.
+> - **RF 0.9704 / MaxEnt 0.9598** reproduce exactly (v1, all pixels). v2: RF 0.975 all / **0.897 forest pixels** (the primary population, because forest fraction alone gives AUC 0.91).
+> - **MaxEnt 150k subsample**: sensitivity from 50k to 500k gives AUC 0.964 → 0.969 (all) and 0.855 → 0.872 (forest); fit time grows as about n^1.6.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Question asked:** Biswas et al. (2025) use only 15 predictor variables. Why does
 this project's Random Forest / MaxEnt feature set (57 columns as of the
 2026-08-22 specific-humidity retrain) include 22 separate `landcover_frac_LC22_*`

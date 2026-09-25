@@ -1,5 +1,21 @@
 # Full Experiment Log — Every Training/Evaluation Run, This Study
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/FULL_EXPERIMENT_LOG.md`. Statements in this document superseded by the audit:
+>
+> - **Term ablation (0.602 / 0.924 / 0.940)**: historical single-seed, fixed-budget runs, with no no-physics arm. Under one validated protocol with 3 seeds: **no physics 0.945, diffusion 0.924, diff + adv 0.939, full 0.939** (Track A). No physics configuration beats no physics on any track.
+> - **Physics vs no physics**: confirmed and extended (3 seeds, paired tests). Full − none: −0.006 (A, p < 0.02 for every seed), CI including 0 (B1, B2), −0.011 (B3).
+> - **'RF 0.950 vs CDR 0.751 on the same fold scheme'**: not the same folds, grid, label or features. On CDR-PINO's own cells, splits and covariates, RF scores **0.974** (B1), 0.959 (B2) and 0.980 (A), vs CDR-PINO 0.719 / 0.570 / 0.939.
+> - **CDR-PINO historical numbers** (0.9398, 0.7510 ± 0.0182, 0.6187 ± 0.0680, 0.8960) reproduce bit-exactly. Under the unified protocol (3 seeds), full CDR scores 0.939 / 0.719 / 0.570 / 0.893 (A / B1 / B2 / B3), and Track A and B1–B3 were separate models trained under different protocols.
+> - **Mann–Kendall significance counts**: reproduce, but the tests are invalid (MK on a smoothed or seasonal series). Seasonal Kendall + FDR gives NDVI 3,552,278 greening / 72,305 browning; LST day 2,435,163 cooling; night 2,080,747 warming; DTR 3,273,301 narrowing.
+> - **Feature count**: the v1 parquet has **57** features (61 columns). v2 has 55 (a different set).
+> - **RF 0.9704 / MaxEnt 0.9598** reproduce exactly (v1, all pixels). v2: RF 0.975 all / **0.897 forest pixels** (the primary population, because forest fraction alone gives AUC 0.91).
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Purpose**: a raw, complete ledger of every experiment run in this study — not
 polished prose, a reference table to pull from when writing the methodology
 section later. Every row is a real, executed run with a real result; nothing here

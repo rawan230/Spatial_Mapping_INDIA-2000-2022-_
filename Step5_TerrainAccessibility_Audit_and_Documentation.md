@@ -1,5 +1,15 @@
 # Step 5 — Terrain & Accessibility Analysis: Audit and Documentation
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/Step5_TerrainAccessibility_Audit_and_Documentation.md`. Statements in this document superseded by the audit:
+>
+> - **−46.9 m elevation**: located at the Neyveli open-cast lignite mines; most likely real terrain, not an SRTM artefact.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Scope:** Step 5a (`Terrain_Elevation_Slope_Aspect_Analysis/`, notebook
 `Step5a_Terrain_Elevation_Slope_Aspect.ipynb`) and Step 5b
 (`Distance_Roads_Railways_Waterways_Analysis/`, notebook

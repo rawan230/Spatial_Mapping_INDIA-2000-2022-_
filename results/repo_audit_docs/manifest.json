@@ -1,0 +1,113 @@
+{
+ "Forest fire Extraction in INDIA(2000-2022)": {
+  "scripts": [
+   "recalc_01_fire_labels.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R1_fire_labels/R1_report.json",
+   "recalculated/R1_fire_labels/annual_extraction_and_forest_cover.csv",
+   "recalculated/R1_fire_labels/biswas_annual_count_comparison_recalc.csv"
+  ]
+ },
+ "NDVI_DATA_INDIA_": {
+  "scripts": [
+   "recalc_04_ndvi.py",
+   "trend_stats.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R4_ndvi/R4_report.json"
+  ]
+ },
+ "LST_analysis": {
+  "scripts": [
+   "recalc_05_lst.py",
+   "trend_stats.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R5_lst/R5_report.json",
+   "recalculated/R5_lst/composite_valid_fraction.csv"
+  ]
+ },
+ "FLDAS Noah Land Surface Model L4 Global Monthly 0.1 x 0.1 degree (MERRA-2 and CHIRPS) (FLDAS_NOAH01_C_GL_M)": {
+  "scripts": [
+   "recalc_02_fldas.py",
+   "recalc_03_lulc.py",
+   "trend_stats.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R2_fldas/R2_report.json",
+   "recalculated/R3_lulc/R3_report.json",
+   "recalculated/R2_fldas/fldas_national_monthly_recalc.csv"
+  ]
+ },
+ "Terrain_Elevation_Slope_Aspect_Analysis": {
+  "scripts": [
+   "recalc_06_terrain.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R6_terrain/R6_report.json"
+  ]
+ },
+ "Distance_Roads_Railways_Waterways_Analysis": {
+  "scripts": [
+   "recalc_07_access.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "recalculated/R7_access/R7_report.json"
+  ]
+ },
+ "Integrated_Analysis": {
+  "scripts": [
+   "build_v2_table.py",
+   "models_classical.py",
+   "analyze_classical.py",
+   "eval_utils.py",
+   "bridge_12km.py",
+   "biswas_style_baseline.py",
+   "make_final_map.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "baseline/CLASSICAL_METRICS.csv",
+   "baseline/PAIRED_trackA.csv",
+   "baseline/PAIRED_B1_B2.csv",
+   "baseline/B1_B2_SUMMARY.csv",
+   "baseline/importance__trackA__RF_v2.json",
+   "baseline/importance__trackA__MaxEnt_v2.json",
+   "baseline/importance__trackA__RF_biswas15.json",
+   "baseline/importance__trackA__MaxEnt_biswas15_LQHP.json",
+   "recalculated/FEATURE_SETS.json",
+   "recalculated/FEATURE_TABLE_v2_report.json"
+  ]
+ },
+ "Physics_Informed_FireRisk_Model": {
+  "scripts": [
+   "repro_historical_cdr.py",
+   "cdr_unified_runner.py",
+   "cdr_term_magnitudes.py",
+   "analyze_cdr.py",
+   "eval_utils.py",
+   "audit_common.py"
+  ],
+  "results": [
+   "cdr_pino/SUMMARY_cdr_unified.csv",
+   "cdr_pino/SEED_LEVEL_RESULTS_cdr.csv",
+   "cdr_pino/FOREST_POPULATION_cdr.csv",
+   "ablation/PAIRED_physics_vs_nophys.csv",
+   "generalization/PAIRED_cdr_vs_classical_same_cells.csv",
+   "cdr_pino/reproduction/repro_validation_tracks_b1_b2_b3.json",
+   "cdr_pino/unified/meta.json",
+   "cdr_pino/term_magnitudes_trackA_full_repro.json",
+   "cdr_pino/term_magnitudes_unified_A_nophys_s42.json",
+   "cdr_pino/term_magnitudes_unified_A_diff_s42.json",
+   "cdr_pino/term_magnitudes_unified_A_diffadv_s42.json",
+   "cdr_pino/term_magnitudes_unified_A_full_s42.json"
+  ]
+ }
+}

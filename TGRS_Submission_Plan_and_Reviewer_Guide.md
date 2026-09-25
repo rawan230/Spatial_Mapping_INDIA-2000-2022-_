@@ -1,5 +1,22 @@
 # TGRS Submission Plan and Reviewer Guide
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/TGRS_Submission_Plan_and_Reviewer_Guide.md`. Statements in this document superseded by the audit:
+>
+> - **Term ablation (0.602 / 0.924 / 0.940)**: historical single-seed, fixed-budget runs, with no no-physics arm. Under one validated protocol with 3 seeds: **no physics 0.945, diffusion 0.924, diff + adv 0.939, full 0.939** (Track A). No physics configuration beats no physics on any track.
+> - **Physics vs no physics**: confirmed and extended (3 seeds, paired tests). Full − none: −0.006 (A, p < 0.02 for every seed), CI including 0 (B1, B2), −0.011 (B3).
+> - **'RF 0.950 vs CDR 0.751 on the same fold scheme'**: not the same folds, grid, label or features. On CDR-PINO's own cells, splits and covariates, RF scores **0.974** (B1), 0.959 (B2) and 0.980 (A), vs CDR-PINO 0.719 / 0.570 / 0.939.
+> - **CDR-PINO historical numbers** (0.9398, 0.7510 ± 0.0182, 0.6187 ± 0.0680, 0.8960) reproduce bit-exactly. Under the unified protocol (3 seeds), full CDR scores 0.939 / 0.719 / 0.570 / 0.893 (A / B1 / B2 / B3), and Track A and B1–B3 were separate models trained under different protocols.
+> - **Zero-shot super-resolution, resolution independence and instance-wise fine-tuning**: not evaluated. Present them as future work only.
+> - **22 land-cover fractions** come from the 2020 map, inside the label window. v2 uses the 2001 map; the measured leakage effect is small.
+> - **RF 0.9704 / MaxEnt 0.9598** reproduce exactly (v1, all pixels). v2: RF 0.975 all / **0.897 forest pixels** (the primary population, because forest fraction alone gives AUC 0.91).
+> - **−46.9 m elevation**: located at the Neyveli open-cast lignite mines; most likely real terrain, not an SRTM artefact.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Purpose of this document.** This is the navigation layer for the manuscript, not a
 replacement for the material it points to. Every step's own README now carries a
 `## Why this step, and how` walkthrough and a `## Comparison against Biswas et al.

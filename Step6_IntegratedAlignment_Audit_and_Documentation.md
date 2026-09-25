@@ -1,5 +1,17 @@
 # Step 6 — Integrated Feature Alignment: Audit and Documentation
 
+<!-- AUDIT-UPDATE-2026-09-25 -->
+> ### Audit update (2026-09-25)
+> A full end-to-end audit recalculated every step from raw data and re-ran every model (`results/FULL_METHODOLOGY_AUDIT.md`).
+> Take paper numbers **only** from `results/FINAL_MANUSCRIPT_NUMBERS.md`. The pre-update copy of this file is in
+> `_Archive_Unwanted_2026-09-25/pre_audit_document_snapshots/Step6_IntegratedAlignment_Audit_and_Documentation.md`. Statements in this document superseded by the audit:
+>
+> - **Feature count**: the v1 parquet has **57** features (61 columns). v2 has 55 (a different set).
+> - **Grid spacing** is 1/120° (≈0.93 km), not 0.01°.
+> - **22 land-cover fractions** come from the 2020 map, inside the label window. v2 uses the 2001 map; the measured leakage effect is small.
+<!-- AUDIT-UPDATE-2026-09-25 -->
+
+
 **Folder:** `Integrated_Analysis/` | **Notebook:** `Step6_Integrated_FireRisk_Analysis.ipynb` (29 cells, executed) | **Outputs:** `Integrated_Outputs/`
 **Audit date:** 2026-08-22 | **Method:** direct inspection of the notebook JSON (cells + executed outputs), the actual parquet schema (`pyarrow.parquet.ParquetFile(...).schema.names`), the actual GeoTIFF band descriptions (`rasterio`), `README.md`, and `PIPELINE_SUMMARY.md`. No notebook cell was edited or re-run.
 

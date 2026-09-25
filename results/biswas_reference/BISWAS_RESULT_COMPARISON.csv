@@ -1,0 +1,45 @@
+result,biswas_reported,current_recalculated,how,comparability
+Train AUC,0.894,0.902 +/- 0.003 (10 splits),"Biswas-style re-implementation, 0.25 deg, 2020 presences, MaxEnt LQHP beta1",Moderate (same protocol type; different data sources for 5 variables; presence count differs)
+Test AUC,0.879,0.893 +/- 0.009 (range 0.877-0.912),as above,Moderate
+"Test AUC, 1 km pixel evaluation (this study, RF v2)",Not reported by Biswas et al.,0.975 all / 0.897 forest,Track A random split,Not directly comparable (different population and AUC definition)
+Presence records (train/test),1830 / 609,969 / 323 (unique 0.25 deg cells with 2020 forest fires: 1292),,Limited: Biswas sample definition internally inconsistent (p.4864)
+"Sensitivity, specificity, precision, F1, AP, Brier, calibration",Not reported by Biswas et al.,see results/final/FINAL_METRICS.csv,,n/a
+Spatial / regional / temporal hold-out AUC,Not reported by Biswas et al.,RF v2 1 km: B1 0.959 all / 0.838 forest; B2 0.935 / 0.782; unseen years 0.965 / 0.872,,n/a
+Forest-fire incidents 2001-2010 / 2011-2020,"232,189 / 243,761","see recalculated/R1_fire_labels/biswas_annual_count_comparison_recalc.csv (this study +0.5..+2.4% per year, r=0.99996)",,High
+Permutation importance: NDVI (%),22.3,19.0,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Air temperature (%),13.1,13.2,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Specific humidity (%),13.0,3.1,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: LST night (%),10.1,14.3,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: LST day (%),9.6,8.1,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Distance to roads (%),5.7,1.9,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Slope (%),5.6,5.8,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Distance to railways (%),4.6,2.4,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Soil moisture (%),3.8,7.5,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Precipitation (%),3.6,2.7,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Near-surface wind speed (%),2.4,2.7,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Elevation (%),2.4,10.7,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Net longwave radiation flux (%),1.8,5.4,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Aspect (%),1.7,0.4,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Permutation importance: Distance to waterways (%),0.5,2.9,MaxEnt-style training-AUC drop normalised to 100% (re-implementation),Moderate
+Percent contribution: NDVI (%),28.4,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Air temperature (%),3.8,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Specific humidity (%),15.0,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: LST night (%),8.9,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: LST day (%),4.5,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Distance to roads (%),2.6,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Slope (%),16.7,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Distance to railways (%),4.9,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Soil moisture (%),0.9,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Precipitation (%),1.7,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Near-surface wind speed (%),4.3,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Elevation (%),2.0,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Net longwave radiation flux (%),0.6,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Aspect (%),3.8,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Percent contribution: Distance to waterways (%),1.7,Not computed (path-dependent MaxEnt optimiser quantity; elapid provides no equivalent),,Not comparable
+Pearson r with fire-point density: NDVI,0.43,0.456,"0.25 deg cells, 2001-2020 forest-fire counts",Moderate (source differs for soil moisture / net LW)
+Pearson r with fire-point density: Slope,0.4,0.223,"0.25 deg cells, 2001-2020 forest-fire counts",Moderate (source differs for soil moisture / net LW)
+Pearson r with fire-point density: Near-surface wind speed,-0.32,-0.363,"0.25 deg cells, 2001-2020 forest-fire counts",Moderate (source differs for soil moisture / net LW)
+Pearson r with fire-point density: Net longwave radiation flux,0.28,0.361,"0.25 deg cells, 2001-2020 forest-fire counts",Moderate (source differs for soil moisture / net LW)
+Pearson r with fire-point density: Soil moisture,0.27,0.389,"0.25 deg cells, 2001-2020 forest-fire counts",Moderate (source differs for soil moisture / net LW)
+Jackknife: variable with highest AUC/gain alone,Specific humidity (qualitative; values only in Fig. 10),NDVI (test AUC 0.799); specific humidity alone 0.723,test AUC (not gain),Limited (metric differs: gain vs AUC)
+Jackknife: variable whose omission hurts most,Specific humidity (qualitative),Net longwave radiation flux (without: 0.883),test AUC,Limited

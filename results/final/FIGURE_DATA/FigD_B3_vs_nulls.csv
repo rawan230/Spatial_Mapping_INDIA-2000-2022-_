@@ -1,0 +1,7 @@
+model,roc_auc
+CDR-PINO full (leak-free),0.8934330289299948
+CDR-PINO no physics,0.904355219547046
+Null: cell fire frequency,0.908355983224128
+Null: same-month frequency,0.9298903329251148
+RF monthly covariates,0.9024639206299246
+RF monthly + month,0.9719702662142942

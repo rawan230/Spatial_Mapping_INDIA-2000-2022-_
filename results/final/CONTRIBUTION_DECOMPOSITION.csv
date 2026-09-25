@@ -1,0 +1,31 @@
+configuration,grid,population_note,auc_all,auc_forest,ap_all,ap_forest
+B1: Biswas-15 predictors + MaxEnt,1 km,"4.16M pixels, prevalence 6.45% (all) / 1.20M forest pixels, 22.4%",0.9450862820991364,0.8177907858472835,0.5628989688196737,0.5767986518639848
+B1b: Biswas-15 predictors + RF,1 km,"4.16M pixels, prevalence 6.45% (all) / 1.20M forest pixels, 22.4%",0.9703848581014018,0.8847624426846665,0.6919155685194487,0.698030761632246
+B2: current (v2) predictors + MaxEnt,1 km,"4.16M pixels, prevalence 6.45% (all) / 1.20M forest pixels, 22.4%",0.967017946040157,0.8657422142808162,0.6625503491169731,0.6642872168342202
+B3: current (v2) predictors + RF,1 km,"4.16M pixels, prevalence 6.45% (all) / 1.20M forest pixels, 22.4%",0.9749735084314194,0.8970765520860362,0.720031563442909,0.7212450297922128
+"CDR covariates (5 static) + RF, 1 km",1 km,"4.16M pixels, prevalence 6.45% (all) / 1.20M forest pixels, 22.4%",0.9576357866450098,0.8261018881754104,0.5467049099610621,0.5478792336952402
+"CDR covariates (9, static summaries) + RF",12 km,"CDR-PINO cells, Track A split, prevalence 42%",0.979991022447516,0.9501523028292274,0.9723920660422,0.9728435294339915
+CDR covariates + MaxEnt,12 km,"CDR-PINO cells, Track A split, prevalence 42%",0.9584520647966864,0.9269761488022152,0.9515641540796784,0.9602644869867992
+CDR covariates + LogReg,12 km,"CDR-PINO cells, Track A split, prevalence 42%",0.9237086741814798,0.8739515138848977,0.8781081929483622,0.8977887103201172
+v2 predictors aggregated + RF,12 km,"CDR-PINO cells, Track A split, prevalence 42%",0.9808430418516294,0.9549026881579978,0.9754460405771505,0.9763525238966364
+B4: CDR-PINO without physics,12 km,"CDR-PINO cells, Track A split, prevalence 42%; mean of 3 seeds",0.9449933418841526,0.9095081724531292,0.9309893598653716,0.9506044356866868
+B5: CDR-PINO + diffusion,12 km,"CDR-PINO cells, Track A split, prevalence 42%; mean of 3 seeds",0.9242239848863733,0.887877513345002,0.9108027746623756,0.9380095190641716
+B6: + diffusion + advection,12 km,"CDR-PINO cells, Track A split, prevalence 42%; mean of 3 seeds",0.9394494104350148,0.8991355573552079,0.921541586275597,0.9436256035802421
+B7: full CDR-PINO,12 km,"CDR-PINO cells, Track A split, prevalence 42%; mean of 3 seeds",0.938760310252583,0.8974531727579089,0.92038659470671,0.942095177719327
+"EFFECT: Model family (RF - MaxEnt), Biswas-15, 1 km",1 km,"paired DeLong 95% CI all [0.0247,0.0259], forest [0.0658,0.0682]",0.0252982014024867,0.0669714102718712,,
+"EFFECT: Model family (RF - MaxEnt), v2, 1 km",1 km,"paired DeLong 95% CI all [0.0077,0.0082], forest [0.0304,0.0322]",0.0079552439652981,0.0313329966482024,,
+"EFFECT: Added predictors/engineering (v2 - Biswas-15), RF",1 km,"paired DeLong 95% CI all [0.0044,0.0048], forest [0.0116,0.0130]",0.0045886499112564,0.0123141071318977,,
+"EFFECT: Added predictors (v2 - Biswas-15), MaxEnt",1 km,"paired DeLong 95% CI all [0.0213,0.0225], forest [0.0466,0.0494]",0.021931607348445,0.0479525207555665,,
+"EFFECT: Predictor restriction (v2 - CDR 5 static), RF",1 km,"paired DeLong 95% CI all [0.0170,0.0177], forest [0.0698,0.0722]",0.0173377206019139,0.0709746599264417,,
+"EFFECT: physics (diff - nophys), CDR track A",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.02076935699777933,,,
+"EFFECT: physics (diffadv - nophys), CDR track A",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.0055439314491376,,,
+"EFFECT: physics (full - nophys), CDR track A",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.006233031631569467,,,
+"EFFECT: physics (diff - nophys), CDR track B1",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.049764120612985,,,
+"EFFECT: physics (diffadv - nophys), CDR track B1",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",0.004715760412066533,,,
+"EFFECT: physics (full - nophys), CDR track B1",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",0.012658348630477134,,,
+"EFFECT: physics (full - nophys), CDR track B2",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.0288516474137651,,,
+"EFFECT: physics (diff - nophys), CDR track B3",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.018832278299426533,,,
+"EFFECT: physics (diffadv - nophys), CDR track B3",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.010230087845274032,,,
+"EFFECT: physics (full - nophys), CDR track B3",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.0109221906170512,,,
+"EFFECT: physics (full - nophys), CDR track B3orig",12 km,"mean of 3 per-seed paired differences (DeLong for A/B3, block bootstrap for B1/B2)",-0.010411593895494667,,,
+"EFFECT: model structure (full CDR-PINO - RF on same covariates/cells), Track A",12 km,"paired DeLong, 3 seeds",-0.041230712194932705,,,

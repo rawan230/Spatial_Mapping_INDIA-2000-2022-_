@@ -1,0 +1,75 @@
+{
+ "random_forest": {
+  "n_estimators": 200,
+  "max_depth": 25,
+  "min_samples_leaf": 3,
+  "class_weight": "balanced",
+  "max_features": "sqrt",
+  "random_state": 42
+ },
+ "maxent_v2": {
+  "feature_types": [
+   "linear",
+   "hinge",
+   "product"
+  ],
+  "beta_multiplier": 4.0,
+  "library": "elapid 1.0.4",
+  "train_rows": 150000,
+  "class_weights": 100,
+  "transform": "cloglog"
+ },
+ "maxent_biswas_style": {
+  "feature_types": [
+   "linear",
+   "quadratic",
+   "hinge",
+   "product"
+  ],
+  "beta_multiplier": 1.0,
+  "max_iter": 10000,
+  "background": "all valid 0.25 deg cells (<10,000)",
+  "presence_split": "75/25, 10 seeds"
+ },
+ "cdr_pino": {
+  "window": 24,
+  "epochs": 80,
+  "width": 32,
+  "layers": 4,
+  "modes": 16,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "optimizer": "AdamW",
+  "scheduler": "ReduceLROnPlateau(val BCE, factor .5, patience 2 checks)",
+  "early_stop": "val AUC, check every 5 ep, patience 4 checks",
+  "split_seed": 42,
+  "architecture": "FNO2d lift 8->32, 4 x (SpectralConv 16x16 + 1x1 skip, GELU), proj 32->32->1; D_net 2-12-12-1 tanh; rho_net 4-12-12-1 tanh; c_adv scalar",
+  "n_params": 1054613,
+  "loss": "adaptive-balanced sum of data (pos-weighted BCE + LSE terminal), PDE residual MSE, BC |grad u|^2 on boundary ring, IC (identically 0)",
+  "physics_configs": [
+   "nophys",
+   "diff",
+   "diffadv",
+   "full"
+  ],
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "environment": "cdr_pinn_env, torch 2.11.0+cu128, NVIDIA RTX PRO 4500 Blackwell"
+ },
+ "splits": {
+  "trackA_1km": "stratified 65/15/20 by corrected label, random_state=42",
+  "B1": "3 folds, CDR-PINO 2 deg block permutation (seed 42), block-carved validation",
+  "B2": "6 KMeans regions on 12 km valid cells (random_state 42); 1 km pixels by nearest centroid",
+  "B3": "held-out years 2000, 2008, 2009, 2015"
+ },
+ "labels": {
+  "primary": "containing-pixel rasterisation of 541,545 forest-fire points (fire_ever)",
+  "populations": [
+   "all valid pixels",
+   "forest pixels (forest_frac_2001 > 0)"
+  ]
+ }
+}
