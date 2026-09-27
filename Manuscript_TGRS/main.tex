@@ -588,6 +588,8 @@ We tested whether a convection-diffusion-reaction equation embedded in a neural 
 \section*{Data Availability}
 The raw products are public (NASA FIRMS and LP DAAC, NASA GES DISC, ESA CCI and C3S, USGS SRTM and Geofabrik OpenStreetMap). The processing code for every step, the classical experiments, the operator training code (102 runs), the per-cell predictions, the analysis tables and the figures are available in the project repositories: \url{https://github.com/rawan230/Spatial_Mapping_INDIA-2000-2022-_}, \url{https://github.com/rawan230/Integrated-Fire-Risk-Analysis-in-India-and-Impliment-Baseline-Random-Forest-Model-} and \url{https://github.com/rawan230/_PINO_For_Spatial_Mapping_INDIA-2000-2022-}, together with the linked step repositories.
 
+The three geographic maps in this paper (Figs. 1, 2 and 10) are first-party plots of this study's own point data and computed rasters, produced with Matplotlib directly from the numerical outputs described in Sections~\ref{sec:data} and \ref{sec:results}. No basemap tile, satellite background or third-party map image is used in any figure, and no national or state boundary is drawn as an overlay: the outline of India visible in each map is simply the extent of the plotted fire points, land-cover pixels or model predictions themselves, not a traced or copied cartographic line. Where an India mask is used only to decide which pixels to plot (Fig.~2), it comes from this project's own dissolved state-boundary polygon (Section~\ref{sec:data}), not from a third-party administrative database such as GADM.
+
 \section*{Acknowledgment}
 The authors thank the providers of the MODIS, FLDAS, ESA CCI and C3S, SRTM and OpenStreetMap data.
 

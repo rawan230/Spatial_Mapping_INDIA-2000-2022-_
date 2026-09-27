@@ -72,6 +72,15 @@ This is equivalent to running `pdflatex main`, then `bibtex main`, then `pdflate
   - breiman2001, phillips2006, delong1988, wang2021gradient.
 - [ ] **Novelty check.** Run the journal's similarity check. The text was written fresh for this
   version: related work is paraphrased and cited, with no quoted passages.
+- [x] **Map originality.** Verified 2026-09-27: every figure-generation script (`figures_src/*.py`
+  and the audit's `results/code/make_figures.py`/`make_final_map.py`) was checked and none imports
+  a basemap/tile library (no `contextily`, `cartopy` tiles, `folium`, Mapbox or Google Maps) and
+  none plots a boundary shapefile as a line. All three geographic maps (Figs. 1, 2, 10) are plain
+  Matplotlib renders of this study's own point data and rasters; the "India" outline in each is the
+  extent of the plotted data itself, not a traced or copied boundary. The one boundary file used
+  (as an invisible pixel mask in Fig. 2 only) is this project's own `India_State_Boundary.shp`,
+  explicitly not GADM (see `Distance_Roads_Railways_Waterways_Analysis/README.md`). This is now
+  also stated in the paper's Data Availability section.
 - [ ] **Style.** The text uses no em-dashes or special symbols. En-dashes appear only in the page
   ranges of the bibliography, which is IEEE style.
 - [ ] **Journal requirements.** Add a graphical abstract or highlights if the journal asks for
