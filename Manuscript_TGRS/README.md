@@ -15,21 +15,28 @@ paper comes from the audit result files. The Markdown version of the same paper 
 | `references.bib` | Bibliography (36 references, IEEE style) |
 | `main.pdf` | Compiled PDF of the current version |
 | `main.bbl` | Compiled bibliography, which some submission systems require |
-| `figures/` | Figures 3 to 10 (PNG, 200 dpi). Figs. 1 and 2 are drawn in TikZ inside `main.tex` |
-| `figures_src/make_fig_contribution.py` | Redraws Fig. 7 with non-overlapping labels from `results/final/FIGURE_DATA/FigA_contribution_1km.csv` |
+| `figures/` | Figures (PNG, 200 dpi). The workflow and architecture figures are drawn in TikZ inside `main.tex` |
+| `figures_src/make_fig_fire_density.py` | Fig. 1: spatial density of the 541,545 real fire points, from Step 1's own `all_forest_fires_2000_2022.csv` |
+| `figures_src/make_fig_lulc.py` | Fig. 2: dominant land-cover class (2001 ESA CCI/C3S, 22 classes grouped to 8), from Step 4's own fraction raster, clipped to India with the NDVI step's own India mask |
+| `figures_src/make_fig_contribution.py` | Redraws the contribution-decomposition figure with non-overlapping labels from `results/final/FIGURE_DATA/FigA_contribution_1km.csv` |
 
 ### Figures
 
-1. **Fig. 1.** Workflow flowchart (TikZ).
-2. **Fig. 2.** Detailed CDR-PINO architecture (TikZ): the FNO path, one Fourier layer, the three
+1. **Fig. 1.** Spatial density of the raw fire-point archive (new; Section II.B).
+2. **Fig. 2.** Dominant land-cover class of India, 2001 (new; Section II.C).
+3. **Fig. 3.** Workflow flowchart (TikZ).
+4. **Fig. 4.** Detailed CDR-PINO architecture (TikZ): the FNO path, one Fourier layer, the three
    physics heads, the spectral derivatives, the residual and the loss.
-3. **Fig. 3.** Physics-term ablation.
-4. **Fig. 4.** Same-cell comparison.
-5. **Fig. 5.** Held-out years vs persistence baselines.
-6. **Fig. 6.** Term magnitudes.
-7. **Fig. 7.** Contribution decomposition.
-8. **Fig. 8.** National susceptibility map.
-9. **Figs. 9 and 10** (Appendix): reference-study importance comparison and MaxEnt sample size.
+5. **Fig. 5.** Physics-term ablation.
+6. **Fig. 6.** Same-cell comparison.
+7. **Fig. 7.** Held-out years vs persistence baselines.
+8. **Fig. 8.** Term magnitudes.
+9. **Fig. 9.** Contribution decomposition.
+10. **Fig. 10.** National susceptibility map.
+11. **Figs. 11 and 12** (Appendix): reference-study importance comparison and MaxEnt sample size.
+
+Figure numbers are assigned automatically by LaTeX from the order figures appear in `main.tex`;
+this list reflects the current compiled order.
 
 ### Tables
 

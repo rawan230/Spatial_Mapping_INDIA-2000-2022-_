@@ -100,8 +100,26 @@ r=\left\lfloor \frac{\varphi-y_0}{\Delta y}\right\rfloor ,
 \end{equation}
 where $(x_0,y_0)$ is the outer corner of the grid, $(\lambda,\varphi)$ are the point coordinates and $\Delta y<0$. The label has 268\,411 positive cells, a prevalence of 6.45\% over all cells and 22.4\% over forest cells. Rounding instead of flooring in (\ref{eq:rasterise}) measures from the cell edge rather than the cell centre and moves 74.9\% of points into a neighbouring cell. Correcting it raises random forest \auc{} by 0.006 over all pixels and 0.011 over forest pixels.
 
+Fig.~\ref{fig:firemap} shows the spatial distribution of the 541\,545 detections before rasterisation. Fires concentrate in three areas: the central Indian highlands and Eastern Ghats, the northeastern hill states, and the Himalayan foothills, with comparatively few detections in the arid northwest and the humid southwestern coast.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{FigFire_point_density.png}
+\caption{Spatial density of the 541\,545 MODIS forest-fire detections used in this study, before assignment to the analysis grid.}
+\label{fig:firemap}
+\end{figure}
+
 \subsection{Predictors}
 The 55 predictors are summarised in Table~\ref{tab:predictors}. They cover all fifteen variable groups of \cite{biswas2025}. Climate and land surface temperature enter as 2001 to 2020 climatological levels together with a Seasonal Kendall trend statistic. Land cover fractions are taken from the 2001 map so that they precede almost the whole label period. Three design points deserve comment. First, a time mean of anomalies computed against a 2001 to 2020 baseline equals the residue of the 26 months outside the baseline, so it carries almost no spatial information: the spatial standard deviation of each climatological level is 40 to 431 times that of its anomaly mean. Second, five variable groups come from products that differ from those of the reference study (MOD11A2 for land surface temperature, MOD13A3 for vegetation, and FLDAS for precipitation, soil moisture and net longwave radiation). Third, distances were validated against exact geodesic distances at 3000 random locations, with root mean square errors of 0.31, 0.65 and 0.32 km for roads, railways and waterways.
+
+Fig.~\ref{fig:lulc} shows the dominant class of the 2001 land cover map used for the land cover group, grouped into eight categories for legibility. Cropland covers most of the Indo-Gangetic plain, forest is concentrated in the central highlands, the Western Ghats and the northeast, and the Himalayan belt is a mix of forest, shrubland and grassland by elevation.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{FigLULC_dominant_class.png}
+\caption{Dominant land-cover class of India from the 2001 ESA CCI/C3S map, grouped into eight categories from the 22 classes underlying the 21 land cover fractions in Table~\ref{tab:predictors}.}
+\label{fig:lulc}
+\end{figure}
 
 \begin{table}[!t]
 \caption{Predictor Set Used by the Classical Models (55 Features)}
