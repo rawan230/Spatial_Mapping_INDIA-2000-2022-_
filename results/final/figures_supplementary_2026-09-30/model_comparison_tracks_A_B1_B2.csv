@@ -1,0 +1,16 @@
+model,track,roc_auc
+CDR-PINO full equation,Track A (random),0.939
+CDR-PINO full equation,Track B1 (spatial blocks),0.719
+CDR-PINO full equation,Track B2 (regions),0.57
+CDR-PINO no physics,Track A (random),0.945
+CDR-PINO no physics,Track B1 (spatial blocks),0.724
+CDR-PINO no physics,Track B2 (regions),0.614
+Logistic Regression,Track A (random),0.924
+Logistic Regression,Track B1 (spatial blocks),0.919
+Logistic Regression,Track B2 (regions),0.872
+MaxEnt,Track A (random),0.958
+MaxEnt,Track B1 (spatial blocks),0.95
+MaxEnt,Track B2 (regions),0.845
+Random Forest,Track A (random),0.98
+Random Forest,Track B1 (spatial blocks),0.974
+Random Forest,Track B2 (regions),0.959
